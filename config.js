@@ -174,7 +174,7 @@ window.CONFIG = {
   // WhatsApp-Kanal: den kompletten Link eintragen (in WhatsApp: Kanal öffnen →
   // Kanalname antippen → „Link teilen“ → „Link kopieren“).
   // Leer lassen ("") = kein WhatsApp-QR-Code.
-  WHATSAPP_KANAL: "https://whatsapp.com/channel/0029VbByAkR0lwgsquR6LW03",
+  WHATSAPP_KANAL: "https://www.whatsapp.com/channel/0029VbByAkR0lwgsquR6LW03",
   WHATSAPP_KANAL_TITEL: "WhatsApp",
   WHATSAPP_KANAL_TEXT: "Kanal folgen",
 
