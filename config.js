@@ -84,12 +84,12 @@ window.CONFIG = {
      Die Reihenfolge und die Schlüssel (fajr, shuruq, …) nicht ändern!
      ------------------------------------------------------------------- */
   GEBETE: {
-    fajr:    { name: "Fajr",    deutsch: "Morgengebet" },
-    shuruq:  { name: "Shuruq",  deutsch: "Sonnenaufgang" },
-    dhuhr:   { name: "Dhuhr",   deutsch: "Mittagsgebet" },
-    asr:     { name: "Asr",     deutsch: "Nachmittagsgebet" },
-    maghrib: { name: "Maghrib", deutsch: "Abendgebet" },
-    isha:    { name: "Isha",    deutsch: "Nachtgebet" },
+    fajr:    { name: "İmsak",    deutsch: "Fajr" },
+    shuruq:  { name: "Güneş",  deutsch: "Shuruq" },
+    dhuhr:   { name: "Öğle",   deutsch: "Dhuhur" },
+    asr:     { name: "İkindi",     deutsch: "Asr" },
+    maghrib: { name: "Akşam", deutsch: "Maghrib" },
+    isha:    { name: "Yatsı",    deutsch: "Isha" },
   },
 
 
