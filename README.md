@@ -68,7 +68,9 @@ Das sollten Sie **als Erstes** eintragen:
 
 | Einstellung | Bedeutung |
 |---|---|
-| `INSTAGRAM_MOSCHEE` / `INSTAGRAM_JUGEND` | Instagram-Namen, z. B. `"@ditib_marktoberdorf"`. Die QR-Codes werden daraus automatisch erzeugt. |
+| `INSTAGRAM_MOSCHEE` / `INSTAGRAM_JUGEND` | Instagram-Namen, z. B. `"@ditib_marktoberdorf"`. Die QR-Codes werden daraus automatisch erzeugt. Lange Namen werden zweizeilig umbrochen. |
+| `WHATSAPP_KANAL` | Link zum WhatsApp-Kanal (in WhatsApp: Kanal → Name antippen → „Link teilen“). Steht hier `""`, verschwindet dieser QR-Code. |
+| `MOSCHEE_NAME` | Vereinsname oben neben dem Logo |
 | `JUMUAH.uhrzeitSommer` / `uhrzeitWinter` | Uhrzeit des Freitagsgebets (derzeit Platzhalter 13:30 / 12:45). |
 | `THEME` | Standard-Design 1–5 (voreingestellt: 5 „Glas“). |
 | `gebetszeiten.json` | Die offiziellen DITIB-Zeiten, siehe Abschnitt 4. |
@@ -83,7 +85,7 @@ Weitere Einstellungen:
 - `GEBETE`: Namen und deutsche Bezeichnungen der Gebetszeiten.
 - `VERSE`: Liste für den Vers des Tages. Jeden Tag kommt automatisch der nächste dran.
 - `ONLINE_ERSATZ.tune`: Minuten-Korrektur je Gebet für die Online-Ersatzzeiten.
-- `HIDSCHRI_KORREKTUR_TAGE`: Hidschri-Datum um ±1 Tag anpassen.
+- `HIDSCHRI_KORREKTUR_TAGE`: Hidschri-Datum um ±1 Tag anpassen. `HIDSCHRI_TUERKISCH` schaltet die türkische Schreibweise (z. B. „14 Cemaziyelevvel 1448“) neben der Umschrift ein oder aus.
 - `BURNIN_SCHUTZ`: unmerkliches Verschieben des Layouts.
 
 Sieht die Seite nach einer Änderung leer aus, fehlt meist ein Komma oder ein Anführungszeichen.
@@ -91,17 +93,20 @@ Machen Sie die letzte Änderung dann rückgängig.
 
 ## 4. Gebetszeiten (`gebetszeiten.json`)
 
-Die Anzeige verwendet die Zeiten in dieser Reihenfolge:
+Die Anzeige verwendet die **offiziellen Diyanet-Zeiten für Marktoberdorf**. Das sind dieselben Zeiten wie in der DITIB-Namaz-Vakti-App. Diyanet führt Marktoberdorf als eigenen Ort mit der ID `10438`. Die Zeiten kommen in dieser Reihenfolge:
 
-1. **`gebetszeiten.json`**: offizielle Zeiten (empfohlen).
-2. **Zwischenspeicher im Browser**: Online-Zeiten, die schon einmal abgerufen wurden. Sie
-   bleiben auch bei Internetausfall verfügbar.
-3. **Aladhan-API** (`method=13`, Diyanet) für Marktoberdorf, nur für Tage, die in der Datei fehlen.
+1. **`gebetszeiten.json`**: Auf GitHub aktualisiert sich diese Datei **jeden Montag automatisch**. Den Ablauf steuert `.github/workflows/gebetszeiten.yml`, er führt `tools/diyanet_laden.py` aus. Von Hand starten Sie ihn so: GitHub → **Actions** → „Gebetszeiten aktualisieren“ → **Run workflow**.
+2. **Diyanet online**: Fehlt ein Tag in der Datei, lädt die Seite ihn direkt bei Diyanet nach und speichert ihn im Browser. So bleiben die Zeiten auch bei einem Internetausfall verfügbar.
+3. **Aladhan-API** (`method=13`, berechnet): Diese Quelle springt nur ein, wenn Diyanet nicht erreichbar ist.
 
-> ⚠️ Die mitgelieferte `gebetszeiten.json` (Oktober bis Dezember 2026) ist nur ein **Beispiel**.
-> Ihre Werte wurden berechnet und sind keine offiziellen DITIB-Zeiten. Ersetzen Sie sie bitte.
+Diyanet stellt immer etwa die nächsten 30 Tage bereit. Von Hand aktualisieren:
+```bash
+python3 tools/diyanet_laden.py
+```
 
-**Aus dem DITIB-Jahreskalender erzeugen:**
+**Alternativ aus einer CSV-Datei** (z. B. aus einem Jahreskalender):
+
+
 
 1. Den Kalender als CSV speichern. In Excel: *Speichern unter → CSV (Trennzeichen-getrennt)*.
    Eine Zeile pro Tag, z. B.:
@@ -202,6 +207,7 @@ gebetszeiten.js       dieselben Daten für den Doppelklick-Modus (wird automatis
 vergleich.html        Alle Designs nebeneinander
 start.sh / start-windows.bat   Start im Kiosk-Modus
 css/  js/  fonts/  lib/        Gestaltung, Programmlogik, Schriften, QR-Bibliothek
+tools/diyanet_laden.py  Diyanet-Zeiten → gebetszeiten.json
 tools/csv_zu_json.py  CSV → gebetszeiten.json
 tests/test.html       Selbsttest
 assets/               DITIB-Logo, Platz für ein eigenes Hintergrundbild

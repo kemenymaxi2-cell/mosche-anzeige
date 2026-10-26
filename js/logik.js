@@ -165,7 +165,8 @@
   };
 
   var hidschriFormat = null;
-  L.hidschri = function (tag, korrekturTage, monatsnamen) {
+  // Hidschri-Datum als Zahlen: { tag, monat (1–12), jahr } oder null.
+  L.hidschriTeile = function (tag, korrekturTage) {
     if (!hidschriFormat) {
       ['islamic-umalqura', 'islamic-civil', 'islamic'].some(function (kal) {
         try {
@@ -175,14 +176,25 @@
         } catch (e) { /* nächsten Kalender probieren */ }
         return false;
       });
-      if (!hidschriFormat) return '';
+      if (!hidschriFormat) return null;
     }
     var d = L.tagPlus(tag, korrekturTage || 0).split('-').map(Number);
     var t = {};
     hidschriFormat.formatToParts(new Date(Date.UTC(d[0], d[1] - 1, d[2], 12)))
       .forEach(function (p) { if (p.type !== 'literal') t[p.type] = parseInt(p.value, 10); });
-    var jahr = t.year || t.relatedYear;
-    return t.day + '. ' + (monatsnamen[t.month - 1] || t.month) + ' ' + jahr + ' n. H.';
+    return { tag: t.day, monat: t.month, jahr: t.year || t.relatedYear };
+  };
+
+  // „14. Dschumada l-Ula 1448 n. H.“
+  L.hidschri = function (tag, korrekturTage, monatsnamen) {
+    var h = L.hidschriTeile(tag, korrekturTage);
+    return h ? h.tag + '. ' + (monatsnamen[h.monat - 1] || h.monat) + ' ' + h.jahr + ' n. H.' : '';
+  };
+
+  // Türkische Schreibweise wie bei Diyanet: „14 Cemaziyelevvel 1448“
+  L.hidschriTuerkisch = function (tag, korrekturTage, monatsnamen) {
+    var h = L.hidschriTeile(tag, korrekturTage);
+    return h ? h.tag + ' ' + (monatsnamen[h.monat - 1] || h.monat) + ' ' + h.jahr : '';
   };
 
   /* ---------- Vers des Tages ---------- */

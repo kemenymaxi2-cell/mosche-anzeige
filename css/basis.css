@@ -303,3 +303,29 @@ body {
   border-radius: 8px;
 }
 .simulation #sim-hinweis { display: block; }
+
+/* ---------- Ergänzungen: WhatsApp-QR, Symbole, zweizeilige Namen, Hidschri türkisch ---------- */
+/* Drei QR-Codes: die Überschrift entfällt, jedes Feld hat ein eigenes Symbol */
+.insta-karte {
+  grid-template-columns: repeat(3, auto);
+  justify-content: space-evenly;
+  align-items: start;
+  gap: 12px;
+  padding: 16px 20px;
+}
+.insta-karte .label { display: none; }
+.qr-block { width: 196px; }
+.qr { width: 136px; height: 136px; }
+.qr-block figcaption { min-height: 72px; justify-content: flex-start; }
+.qr-titel { font-size: 18px; }
+.handle { font-size: 22px; line-height: 1.12; }
+.hidschri { font-size: 31px; white-space: nowrap; }
+.qr-symbol {
+  width: .95em; height: .95em;
+  margin-right: .3em;
+  vertical-align: -.13em;
+  fill: none; stroke: currentColor; stroke-width: 2;
+}
+.qr-symbol .voll { fill: currentColor; stroke: none; }
+.handle { text-align: center; }
+.h-trenner { opacity: .55; }

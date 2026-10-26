@@ -131,6 +131,25 @@ def umwandeln(text):
     return ergebnis, fehler
 
 
+def schreiben(pfad, daten, quelle):
+    """Speichert gebetszeiten.json und – mit denselben Daten – gebetszeiten.js."""
+    # Ein Tag pro Zeile – gut lesbar und leicht von Hand zu korrigieren.
+    zeilen = ['  "_quelle": ' + json.dumps(quelle, ensure_ascii=False)]
+    for tag in sorted(daten):
+        zeilen.append(f'  "{tag}": ' + json.dumps(daten[tag], separators=(", ", ": ")))
+    inhalt = "{\n" + ",\n".join(zeilen) + "\n}\n"
+    with open(pfad, "w", encoding="utf-8") as f:
+        f.write(inhalt)
+    # Gleiche Daten als .js-Datei: wird gebraucht, wenn index.html per Doppelklick
+    # (ohne Webserver) geöffnet wird – dann darf der Browser keine .json lesen.
+    js_pfad = os.path.splitext(pfad)[0] + ".js"
+    with open(js_pfad, "w", encoding="utf-8") as f:
+        f.write("/* Automatisch erzeugt – nicht von Hand bearbeiten, sondern gebetszeiten.json\n"
+                "   ändern bzw. tools/csv_zu_json.py oder tools/diyanet_laden.py ausführen. */\n"
+                "window.GEBETSZEITEN = " + inhalt.rstrip() + ";\n")
+    return js_pfad
+
+
 def main():
     hier = os.path.dirname(os.path.abspath(__file__))
     p = argparse.ArgumentParser(description="CSV mit Gebetszeiten in gebetszeiten.json umwandeln.")
@@ -153,20 +172,7 @@ def main():
             daten = {k: v for k, v in json.load(f).items() if not k.startswith("_")}
     daten.update(neu)
 
-    # Ein Tag pro Zeile – gut lesbar und leicht von Hand zu korrigieren.
-    zeilen = ['  "_quelle": ' + json.dumps(a.quelle, ensure_ascii=False)]
-    for tag in sorted(daten):
-        zeilen.append(f'  "{tag}": ' + json.dumps(daten[tag], separators=(", ", ": ")))
-    inhalt = "{\n" + ",\n".join(zeilen) + "\n}\n"
-    with open(a.ausgabe, "w", encoding="utf-8") as f:
-        f.write(inhalt)
-    # Gleiche Daten als .js-Datei: wird gebraucht, wenn index.html per Doppelklick
-    # (ohne Webserver) geöffnet wird – dann darf der Browser keine .json lesen.
-    js_pfad = os.path.splitext(a.ausgabe)[0] + ".js"
-    with open(js_pfad, "w", encoding="utf-8") as f:
-        f.write("/* Automatisch erzeugt von tools/csv_zu_json.py – nicht von Hand bearbeiten,\n"
-                "   sondern gebetszeiten.json ändern bzw. das Skript erneut ausführen. */\n"
-                "window.GEBETSZEITEN = " + inhalt.rstrip() + ";\n")
+    js_pfad = schreiben(a.ausgabe, daten, a.quelle)
 
     tage = sorted(neu)
     print(f"{len(neu)} Tage übernommen ({tage[0]} bis {tage[-1]}), {fehler} Zeilen übersprungen.")

@@ -91,9 +91,7 @@
     kacheln[k] = el;
   });
 
-  function qrZeichnen(ziel, handle) {
-    var name = String(handle || '').trim().replace(/^@/, '');
-    var url = 'https://instagram.com/' + encodeURIComponent(name);
+  function qrZeichnen(ziel, url) {
     try {
       var qr = qrcode(0, 'M');
       qr.addData(url);
@@ -106,12 +104,43 @@
       ziel.innerHTML = '<svg viewBox="0 0 ' + g + ' ' + g + '" shape-rendering="crispEdges">' +
         '<rect width="' + g + '" height="' + g + '" class="qr-hg"/><path d="' + pfad + '" class="qr-vg"/></svg>';
     } catch (e) { ziel.textContent = ''; }
-    return '@' + name;
   }
-  $('qr-moschee-handle').textContent = qrZeichnen($('qr-moschee'), CFG.INSTAGRAM_MOSCHEE);
-  $('qr-jugend-handle').textContent = qrZeichnen($('qr-jugend'), CFG.INSTAGRAM_JUGEND);
-  $('qr-moschee-titel').textContent = CFG.INSTAGRAM_MOSCHEE_TITEL || '';
-  $('qr-jugend-titel').textContent = CFG.INSTAGRAM_JUGEND_TITEL || '';
+
+  // Kleine Symbole vor dem Titel, damit man sieht, wohin der QR-Code führt.
+  var SYMBOLE = {
+    instagram: '<svg class="qr-symbol" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/>' +
+      '<circle cx="12" cy="12" r="4.2"/><circle class="voll" cx="17.4" cy="6.6" r="1.2"/></svg>',
+    whatsapp: '<svg class="qr-symbol" viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M12 3.2a8.8 8.8 0 0 0-7.6 13.2L3.2 20.8l4.5-1.2A8.8 8.8 0 1 0 12 3.2z"/></svg>',
+  };
+
+  // Titel (mit Symbol) und Text darunter setzen. Bei langen Namen darf nach
+  // jedem „_“ bzw. „.“ umbrochen werden – so bleibt das @ immer sichtbar.
+  function qrBeschriften(id, symbol, titel, text) {
+    var t = $(id + '-titel'), h = $(id + '-handle');
+    t.innerHTML = SYMBOLE[symbol] + '<span></span>';
+    t.lastChild.textContent = titel || '';
+    h.textContent = '';
+    String(text).replace(/([_.])/g, '$1\n').split('\n').forEach(function (teil, i) {
+      if (i) h.appendChild(document.createElement('wbr'));
+      h.appendChild(document.createTextNode(teil));
+    });
+  }
+
+  function instagram(id, handle, titel) {
+    var name = String(handle || '').trim().replace(/^@/, '');
+    qrZeichnen($(id), 'https://instagram.com/' + encodeURIComponent(name));
+    qrBeschriften(id, 'instagram', titel, '@' + name);
+  }
+  instagram('qr-moschee', CFG.INSTAGRAM_MOSCHEE, CFG.INSTAGRAM_MOSCHEE_TITEL);
+  instagram('qr-jugend', CFG.INSTAGRAM_JUGEND, CFG.INSTAGRAM_JUGEND_TITEL);
+
+  if (CFG.WHATSAPP_KANAL) {
+    qrZeichnen($('qr-whatsapp'), CFG.WHATSAPP_KANAL);
+    qrBeschriften('qr-whatsapp', 'whatsapp', CFG.WHATSAPP_KANAL_TITEL || 'WhatsApp', CFG.WHATSAPP_KANAL_TEXT || '');
+  } else {
+    $('qr-whatsapp').parentNode.style.display = 'none';
+  }
 
   /* ---------- Laufende Aktualisierung ---------- */
 
@@ -144,7 +173,14 @@
 
   function tagesInhalte(w) {
     setzeText('datum', L.datumText(w.tag));
-    setzeText('hidschri', L.hidschri(w.tag, CFG.HIDSCHRI_KORREKTUR_TAGE, CFG.HIDSCHRI_MONATE));
+    // Hidschri-Datum: Umschrift, daneben (falls gewünscht) auf Türkisch
+    var hd = $('hidschri');
+    hd.innerHTML = '<span class="h-umschrift"></span>';
+    hd.firstChild.textContent = L.hidschri(w.tag, CFG.HIDSCHRI_KORREKTUR_TAGE, CFG.HIDSCHRI_MONATE);
+    if (CFG.HIDSCHRI_TUERKISCH && CFG.HIDSCHRI_MONATE_TUERKISCH) {
+      hd.insertAdjacentHTML('beforeend', '<span class="h-trenner"> · </span><span class="h-tuerkisch" lang="tr"></span>');
+      hd.lastChild.textContent = L.hidschriTuerkisch(w.tag, CFG.HIDSCHRI_KORREKTUR_TAGE, CFG.HIDSCHRI_MONATE_TUERKISCH);
+    }
 
     var vers = L.versDesTages(w.tag, CFG.VERSE);
     setzeText('vers-text', vers ? '„' + vers.text + '“' : '');
@@ -245,7 +281,7 @@
   var datenBereit = false;
   function datenNachladen(tag) {
     if (!datenBereit) return;
-    Daten.sicherstellen([L.tagPlus(tag, -1), tag, L.tagPlus(tag, 1)]);
+    Daten.sicherstellen([tag, L.tagPlus(tag, 1)]);
   }
 
   function takt() {

@@ -1,14 +1,19 @@
 /* Gebetszeiten laden:
-   1. gebetszeiten.json (offizielle Zeiten)
-   2. Zwischenspeicher im Browser (localStorage) mit früher abgerufenen Online-Zeiten
-   3. Aladhan-API (method=13, Diyanet) – Ergebnis wird zwischengespeichert */
+   1. gebetszeiten.json (offizielle Diyanet-Zeiten für Marktoberdorf)
+   2. Diyanet online (Ort 10438) – abgerufene Tage werden im Browser gespeichert
+   3. Aladhan-API (method=13, berechnet) – ebenfalls zwischengespeichert
+   Die gespeicherten Online-Zeiten bleiben bei Internetausfall verfügbar. */
 (function (global) {
   'use strict';
 
   var CACHE_SCHLUESSEL = 'moschee-gebetszeiten-v1';
+  var DIYANET_SCHLUESSEL = 'moschee-gebetszeiten-diyanet-v1';
+  var DIYANET_URL = 'https://ezanvakti.emushaf.net/vakitler/';
+  var DIYANET_FELDER = { fajr: 'Imsak', shuruq: 'Gunes', dhuhr: 'Ogle', asr: 'Ikindi', maghrib: 'Aksam', isha: 'Yatsi' };
   var API_REIHENFOLGE = { fajr: 'Fajr', shuruq: 'Sunrise', dhuhr: 'Dhuhr', asr: 'Asr', maghrib: 'Maghrib', isha: 'Isha' };
 
   var cfg, datei = {}, cache = { signatur: '', tage: {} }, laufend = {};
+  var diyanet = { ortId: null, tage: {} }, diyanetLaeuft = null, diyanetVersuch = 0;
 
   function normZeit(z) {
     var m = String(z || '').match(/(\d{1,2})[:.](\d{2})/);
@@ -40,12 +45,50 @@
     } catch (e) { /* kein Zwischenspeicher verfügbar */ }
   }
 
+  // Alte Tage (älter als 7 Tage) weglassen, damit der Speicher klein bleibt.
+  function ohneAlteTage(tage) {
+    var grenze = Logik.tagPlus(new Date().toISOString().slice(0, 10), -7), aus = {};
+    Object.keys(tage).forEach(function (t) { if (t >= grenze) aus[t] = tage[t]; });
+    return aus;
+  }
+
   function cacheSpeichern() {
-    // Alte Tage (älter als 7 Tage) entfernen, damit der Speicher klein bleibt.
-    var grenze = Logik.tagPlus(new Date().toISOString().slice(0, 10), -7);
-    var kopie = { signatur: cache.signatur, tage: {} };
-    Object.keys(cache.tage).forEach(function (t) { if (t >= grenze) kopie.tage[t] = cache.tage[t]; });
-    try { localStorage.setItem(CACHE_SCHLUESSEL, JSON.stringify(kopie)); } catch (e) { /* egal */ }
+    try {
+      localStorage.setItem(CACHE_SCHLUESSEL, JSON.stringify({ signatur: cache.signatur, tage: ohneAlteTage(cache.tage) }));
+    } catch (e) { /* egal */ }
+  }
+
+  function diyanetCacheLaden() {
+    try {
+      var c = JSON.parse(localStorage.getItem(DIYANET_SCHLUESSEL) || 'null');
+      if (c && c.tage && c.ortId === cfg.DIYANET.ortId) diyanet = c;
+    } catch (e) { /* kein Zwischenspeicher verfügbar */ }
+    diyanet.ortId = cfg.DIYANET.ortId;
+  }
+
+  // Diyanet liefert die nächsten ~30 Tage für den Ort auf einmal.
+  function diyanetAbrufen() {
+    if (diyanetLaeuft) return diyanetLaeuft;
+    if (Date.now() - diyanetVersuch < 30 * 60000) return Promise.resolve();   // höchstens alle 30 Min.
+    diyanetVersuch = Date.now();
+    diyanetLaeuft = mitTimeout(DIYANET_URL + encodeURIComponent(cfg.DIYANET.ortId), 20000)
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (liste) {
+        (liste || []).forEach(function (eintrag) {
+          var d = String(eintrag.MiladiTarihKisa || '').split('.');     // DD.MM.YYYY
+          if (d.length !== 3) return;
+          var z = {};
+          Logik.SCHLUESSEL.forEach(function (k) { z[k] = eintrag[DIYANET_FELDER[k]]; });
+          z = normTag(z);
+          if (z) diyanet.tage[d[2] + '-' + d[1] + '-' + d[0]] = z;
+        });
+        try {
+          localStorage.setItem(DIYANET_SCHLUESSEL, JSON.stringify({ ortId: diyanet.ortId, tage: ohneAlteTage(diyanet.tage) }));
+        } catch (e) { /* egal */ }
+      })
+      .catch(function (e) { console.warn('Diyanet-Gebetszeiten nicht abrufbar:', e.message); })
+      .finally(function () { diyanetLaeuft = null; });
+    return diyanetLaeuft;
   }
 
   function mitTimeout(url, ms) {
@@ -111,11 +154,13 @@
   }
 
   var Daten = {
-    quelle: {},   // tag → "datei" | "online"
+    quelle: {},   // tag → "datei" | "diyanet" | "aladhan"
 
     init: function (konfiguration) {
       cfg = konfiguration;
+      cfg.DIYANET = cfg.DIYANET || { aktiv: false };
       cacheLaden();
+      diyanetCacheLaden();
       if (cache.signatur !== tuneSignatur()) cache = { signatur: tuneSignatur(), tage: {} };
       return dateiLaden();
     },
@@ -124,20 +169,26 @@
 
     zeiten: function (tag) {
       if (datei[tag]) { this.quelle[tag] = 'datei'; return datei[tag]; }
-      if (cache.tage[tag]) { this.quelle[tag] = 'online'; return cache.tage[tag]; }
+      if (diyanet.tage[tag]) { this.quelle[tag] = 'diyanet'; return diyanet.tage[tag]; }
+      if (cache.tage[tag]) { this.quelle[tag] = 'aladhan'; return cache.tage[tag]; }
       return null;
     },
 
     // Sorgt dafür, dass für die genannten Tage Zeiten vorhanden sind.
     sicherstellen: function (tage) {
-      var self = this, monate = {};
-      if (!cfg.ONLINE_ERSATZ.aktiv) return Promise.resolve();
-      tage.forEach(function (tag) {
-        if (!self.zeiten(tag)) monate[tag.slice(0, 7)] = true;
+      var self = this;
+      function fehlend() { return tage.filter(function (t) { return !self.zeiten(t); }); }
+      if (!fehlend().length) return Promise.resolve();
+      var schritt = cfg.DIYANET.aktiv ? diyanetAbrufen() : Promise.resolve();
+      return schritt.then(function () {
+        // Was Diyanet nicht liefern konnte, notfalls berechnen lassen.
+        var monate = {};
+        if (!cfg.ONLINE_ERSATZ.aktiv) return;
+        fehlend().forEach(function (tag) { monate[tag.slice(0, 7)] = true; });
+        return Promise.all(Object.keys(monate).map(function (ym) {
+          return monatAbrufen(Number(ym.slice(0, 4)), Number(ym.slice(5, 7)));
+        }));
       });
-      return Promise.all(Object.keys(monate).map(function (ym) {
-        return monatAbrufen(Number(ym.slice(0, 4)), Number(ym.slice(5, 7)));
-      }));
     },
   };
 

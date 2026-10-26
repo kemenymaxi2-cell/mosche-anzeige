@@ -24,8 +24,8 @@ window.CONFIG = {
      1) MOSCHEE
      ------------------------------------------------------------------- */
 
-  // Name, der klein oben auf dem Bildschirm steht.
-  MOSCHEE_NAME: "DITIB-Moschee Marktoberdorf",
+  // Name, der oben auf dem Bildschirm neben dem Logo steht.
+  MOSCHEE_NAME: "DITIB Türkisch-Islamische Gemeinde zu Marktoberdorf e.V.",
 
   // Standort (wird nur für die Ersatz-Berechnung über das Internet
   // gebraucht, falls in gebetszeiten.json ein Tag fehlt).
@@ -97,11 +97,22 @@ window.CONFIG = {
      4) GEBETSZEITEN-QUELLE
      ------------------------------------------------------------------- */
 
-  // Primäre Quelle: lokale Datei mit den offiziellen DITIB/Diyanet-Zeiten.
-  // Erzeugen Sie sie mit tools/csv_zu_json.py aus dem Jahreskalender.
+  // Reihenfolge: 1. diese Datei → 2. Diyanet online → 3. Aladhan (Berechnung)
+
+  // 1) Lokale Datei mit den offiziellen Zeiten (wie in der DITIB-Namaz-Vakti-App).
+  //    Wird automatisch von tools/diyanet_laden.py befüllt (auf GitHub
+  //    läuft das jede Woche von selbst) oder mit tools/csv_zu_json.py aus einer CSV.
   GEBETSZEITEN_DATEI: "gebetszeiten.json",
 
-  // Ersatzquelle, wenn ein Tag in der Datei fehlt: Aladhan-Internetdienst.
+  // 2) Fehlt ein Tag in der Datei: direkt bei Diyanet nachladen.
+  //    ortId 10438 = MARKTOBERDORF (Diyanet-Ortsliste: Almanya → Bayern).
+  DIYANET: {
+    aktiv: true,
+    ortId: 10438,
+  },
+
+  // 3) Letzte Ersatzquelle, falls Diyanet nicht erreichbar ist:
+  //    berechnete Zeiten vom Aladhan-Internetdienst.
   ONLINE_ERSATZ: {
     aktiv: true,
     methode: 13,        // 13 = Diyanet İşleri Başkanlığı (Türkei)
@@ -150,14 +161,22 @@ window.CONFIG = {
 
 
   /* -------------------------------------------------------------------
-     6) INSTAGRAM (QR-Codes)
-     Einfach den Instagram-Namen mit oder ohne @ eintragen.
+     6) SOCIAL MEDIA (QR-Codes)
+     Instagram: einfach den Namen mit oder ohne @ eintragen.
+     Lange Namen werden automatisch zweizeilig umbrochen.
      ------------------------------------------------------------------- */
   INSTAGRAM_MOSCHEE: "@ditib_marktoberdorf",
   INSTAGRAM_MOSCHEE_TITEL: "Moschee",
 
   INSTAGRAM_JUGEND: "@ditib_jugend_marktoberdorf",
   INSTAGRAM_JUGEND_TITEL: "Jugend",
+
+  // WhatsApp-Kanal: den kompletten Link eintragen (in WhatsApp: Kanal öffnen →
+  // Kanalname antippen → „Link teilen“ → „Link kopieren“).
+  // Leer lassen ("") = kein WhatsApp-QR-Code.
+  WHATSAPP_KANAL: "https://whatsapp.com/channel/PLATZHALTER",
+  WHATSAPP_KANAL_TITEL: "WhatsApp",
+  WHATSAPP_KANAL_TEXT: "Kanal folgen",
 
 
   /* -------------------------------------------------------------------
@@ -210,6 +229,14 @@ window.CONFIG = {
     "Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Akhir",
     "Dschumada l-Ula", "Dschumada l-Akhira", "Radschab", "Scha'ban",
     "Ramadan", "Schawwal", "Dhu l-Qa'da", "Dhu l-Hiddscha",
+  ],
+
+  // Hidschri-Datum zusätzlich auf Türkisch anzeigen (true = ja, false = nein).
+  HIDSCHRI_TUERKISCH: true,
+  HIDSCHRI_MONATE_TUERKISCH: [
+    "Muharrem", "Safer", "Rebiülevvel", "Rebiülahir",
+    "Cemaziyelevvel", "Cemaziyelahir", "Recep", "Şaban",
+    "Ramazan", "Şevval", "Zilkade", "Zilhicce",
   ],
 
 

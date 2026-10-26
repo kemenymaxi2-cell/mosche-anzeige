@@ -185,7 +185,7 @@
 .theme-4 .g-name { font-size: 50px; }
 .theme-4 .vers-karte { padding: 0 48px 0 0; }
 .theme-4 .vers-text { font-weight: 300; font-size: 38px; }
-.theme-4 .insta-karte { padding: 0 0 0 48px; border-left: 1px solid rgba(255, 255, 255, .14); }
+.theme-4 .insta-karte { padding: 4px 0 0 28px; border-left: 1px solid rgba(255, 255, 255, .14); }
 .theme-4 .qr { border-radius: 4px; }
 .theme-4 .moschee-name { font-weight: 400; font-size: 30px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-2); }
 .theme-4 .j-titel { font-weight: 200; font-size: 230px; color: var(--text); }
