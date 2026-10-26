@@ -1,0 +1,1 @@
+Hier kann ein eigenes Ersatz-Hintergrundbild liegen (z. B. hintergrund.jpg, 1920x1080). In config.js: HINTERGRUNDBILD: "assets/hintergrund.jpg"

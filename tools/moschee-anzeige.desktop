@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Gebetszeiten-Anzeige
+Comment=Startet die Moschee-Anzeige im Kiosk-Modus
+# Pfad anpassen, falls der Ordner woanders liegt:
+Exec=/home/pi/moschee-anzeige/start.sh
+X-GNOME-Autostart-enabled=true

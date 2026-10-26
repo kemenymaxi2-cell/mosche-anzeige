@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gebetszeiten – DITIB Marktoberdorf</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/basis.css">
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/theme-glas.css">
+</head>
+<body class="theme-1">
+
+  <!-- Hintergrund: Farbverlauf/Bild (immer da), darüber der Stream, darüber Abdunklung + Muster -->
+  <div id="hintergrund" aria-hidden="true">
+    <div id="bg-verlauf"></div>
+    <div id="bg-bild"></div>
+    <div id="stream-huelle"></div>
+    <div id="bg-abdunklung"></div>
+    <div id="bg-muster"></div>
+  </div>
+
+  <div id="buehne">
+    <div class="rahmen-ornament" aria-hidden="true"></div>
+
+    <!-- ===== Hauptbildschirm ===== -->
+    <main id="haupt" class="ansicht sichtbar">
+      <header class="kopf">
+        <div class="marke">
+          <div class="logo-glas" aria-hidden="true"><div class="logo"></div></div>
+          <div class="moschee-name" id="moschee-name"></div>
+        </div>
+        <div class="jumuah-mini" id="jumuah-mini"></div>
+      </header>
+
+      <section class="oben">
+        <div class="karte uhr-karte">
+          <div class="uhr"><span class="hhmm" id="uhr-hhmm">--:--</span><span class="sek" id="uhr-sek">--</span></div>
+          <div class="datum" id="datum"></div>
+          <div class="hidschri" id="hidschri"></div>
+        </div>
+
+        <div class="karte naechstes-karte">
+          <div class="label">Nächstes Gebet</div>
+          <div class="n-name" id="n-name">–</div>
+          <div class="n-deutsch" id="n-deutsch"></div>
+          <div class="n-countdown" id="n-countdown"></div>
+          <div class="n-hinweis" id="n-hinweis"></div>
+        </div>
+      </section>
+
+      <section class="gebete" id="gebete"></section>
+
+      <section class="unten">
+        <div class="karte vers-karte">
+          <div class="label">Vers des Tages</div>
+          <blockquote class="vers-text" id="vers-text"></blockquote>
+          <div class="vers-quelle" id="vers-quelle"></div>
+        </div>
+
+        <div class="karte insta-karte">
+          <div class="label">Instagram</div>
+          <div class="qr-reihe">
+            <figure class="qr-block">
+              <div class="qr" id="qr-moschee"></div>
+              <figcaption><span class="qr-titel" id="qr-moschee-titel"></span><span class="handle" id="qr-moschee-handle"></span></figcaption>
+            </figure>
+            <figure class="qr-block">
+              <div class="qr" id="qr-jugend"></div>
+              <figcaption><span class="qr-titel" id="qr-jugend-titel"></span><span class="handle" id="qr-jugend-handle"></span></figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== Jumu'ah-Sonderansicht ===== -->
+    <section id="jumuah" class="ansicht" aria-hidden="true">
+      <div class="j-inhalt">
+        <div class="j-ornament" aria-hidden="true"></div>
+        <div class="logo-glas j-logo" aria-hidden="true"><div class="logo"></div></div>
+        <div class="j-titel">Jumu'ah</div>
+        <div class="j-untertitel">Freitagsgebet</div>
+        <div class="j-zeit" id="j-zeit">--:--</div>
+        <div class="j-datum" id="j-datum"></div>
+        <div class="j-ornament unten" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <div id="sim-hinweis"></div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="gebetszeiten.js"></script>
+  <script src="lib/qrcode.js"></script>
+  <script src="js/logik.js"></script>
+  <script src="js/daten.js"></script>
+  <script src="js/stream.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Selbsttest – Gebetsanzeige</title>
+  <style>
+    body { font: 16px/1.45 system-ui, sans-serif; margin: 32px; background: #f6f6f4; color: #222; }
+    h1 { font-size: 24px; } h2 { font-size: 18px; margin-top: 28px; }
+    .ok { color: #11733a; } .fehler { color: #b3261e; font-weight: 600; }
+    li { margin: 2px 0; } code { background: #e9e9e4; padding: 1px 5px; border-radius: 4px; }
+    #gesamt { font-size: 20px; font-weight: 700; padding: 10px 14px; border-radius: 8px; display: inline-block; }
+    #gesamt.ok { background: #d9f2e1; } #gesamt.fehler { background: #fbdcd9; }
+    a { color: #1a4fb0; }
+  </style>
+</head>
+<body>
+  <h1>Selbsttest der Anzeige-Logik</h1>
+  <div id="gesamt">läuft …</div>
+  <ul id="liste"></ul>
+
+  <h2>Simulationen zum Anschauen (öffnet die echte Anzeige)</h2>
+  <ul>
+    <li><a href="../index.html?now=2026-10-29T12:00">Donnerstag 12:00:00</a> – Jumu'ah-Ansicht erscheint sofort für 20 s, dann alle 3 Min. wieder</li>
+    <li><a href="../index.html?now=2026-10-29T11:59:50">Donnerstag 11:59:50</a> – nach 10 s weiche Überblendung zur Jumu'ah-Ansicht</li>
+    <li><a href="../index.html?now=2026-10-29T12:00&amp;speed=10">Donnerstag, 10-fache Geschwindigkeit</a> – Wechsel im Schnelldurchlauf</li>
+    <li><a href="../index.html?now=2026-10-28T12:00">Mittwoch 12:00</a> – keine Jumu'ah-Ansicht</li>
+    <li><a href="../index.html?now=2026-10-30T07:00">Freitag 07:00</a> – Fajr aktuell, Hinweis „Fajr-Zeit endet …“</li>
+    <li><a href="../index.html?now=2026-10-30T09:00">Freitag 09:00</a> – zwischen Shuruq und Dhuhr: kein Gebet markiert</li>
+    <li><a href="../index.html?now=2026-10-30T12:30">Freitag 12:30</a> – Dhuhr aktuell</li>
+    <li><a href="../index.html?now=2026-10-29T23:30">Donnerstag 23:30</a> – Isha aktuell, nächstes Gebet: Fajr (morgen)</li>
+    <li><a href="../index.html?now=2026-10-30T03:00">Freitag 03:00</a> – nach Mitternacht weiterhin Isha</li>
+    <li><a href="../index.html?jumuah=immer">Jumu'ah-Ansicht dauerhaft</a></li>
+    <li><a href="../index.html?theme=5&amp;now=2026-10-29T17:11:50">Design 5, Do 17:11:50</a> – nach 10 s Maghrib: weicher Wechsel von hell zu dunkel</li>
+    <li><a href="../vergleich.html">Alle Designs nebeneinander</a></li>
+  </ul>
+
+  <script src="../config.js"></script>
+  <script src="../js/logik.js"></script>
+  <script>
+    var L = Logik, TZ = 'Europe/Berlin', ok = 0, fehler = 0;
+    function pruefe(name, ist, soll) {
+      var gut = JSON.stringify(ist) === JSON.stringify(soll);
+      var li = document.createElement('li');
+      li.className = gut ? 'ok' : 'fehler';
+      li.textContent = (gut ? '✔ ' : '✘ ') + name + (gut ? '' : ' – erwartet ' + JSON.stringify(soll) + ', erhalten ' + JSON.stringify(ist));
+      document.getElementById('liste').appendChild(li);
+      gut ? ok++ : fehler++;
+    }
+    function ms(tag, uhr) { return L.zeitpunkt(tag, uhr, TZ); }
+    function w(tag, uhr) { return L.wanduhr(ms(tag, uhr), TZ); }
+
+    // Feste Testzeiten (Donnerstag 29.10.2026 / Freitag 30.10.2026)
+    var DO = '2026-10-29', FR = '2026-10-30';
+    var zDo = { fajr: '05:14', shuruq: '06:52', dhuhr: '12:06', asr: '14:42', maghrib: '17:09', isha: '18:42' };
+    var zFr = { fajr: '05:15', shuruq: '06:53', dhuhr: '12:06', asr: '14:41', maghrib: '17:07', isha: '18:41' };
+    function zustand(uhr) {
+      return L.zustand(ms(DO, uhr), TZ, DO, { heute: zDo, morgen: zFr });
+    }
+    function kurz(s) { return [s.aktuell, s.naechstes && s.naechstes.schluessel, s.naechstes && s.naechstes.tag]; }
+
+    // --- Aktuelles / nächstes Gebet ---
+    pruefe('03:00 → Isha (vom Vortag) aktuell, nächstes Fajr heute', kurz(zustand('03:00')), ['isha', 'fajr', DO]);
+    pruefe('05:14 genau → Fajr aktuell', kurz(zustand('05:14')), ['fajr', 'dhuhr', DO]);
+    pruefe('06:00 → Fajr aktuell, nächstes Dhuhr', kurz(zustand('06:00')), ['fajr', 'dhuhr', DO]);
+    pruefe('06:00 → Hinweis Fajr endet um Shuruq', zustand('06:00').fajrEndeMs, ms(DO, '06:52'));
+    pruefe('06:52 → Shuruq: KEIN Gebet aktuell, nächstes Dhuhr', kurz(zustand('06:52')), [null, 'dhuhr', DO]);
+    pruefe('09:00 → kein Gebet aktuell, nächstes Dhuhr', kurz(zustand('09:00')), [null, 'dhuhr', DO]);
+    pruefe('12:05 → kein Gebet aktuell', kurz(zustand('12:05')), [null, 'dhuhr', DO]);
+    pruefe('12:06 → Dhuhr aktuell, nächstes Asr', kurz(zustand('12:06')), ['dhuhr', 'asr', DO]);
+    pruefe('15:00 → Asr aktuell', kurz(zustand('15:00')), ['asr', 'maghrib', DO]);
+    pruefe('17:30 → Maghrib aktuell', kurz(zustand('17:30')), ['maghrib', 'isha', DO]);
+    pruefe('23:30 → Isha aktuell, nächstes Fajr morgen', kurz(zustand('23:30')), ['isha', 'fajr', FR]);
+    pruefe('23:30 ohne Daten für morgen → nächstes unbekannt',
+      L.zustand(ms(DO, '23:30'), TZ, DO, { heute: zDo }).naechstes, null);
+    pruefe('Countdown 10:54 → Dhuhr in 1 Std. 12 Min.',
+      L.dauerText(zustand('10:54').naechstes.ms - ms(DO, '10:54')), '1 Std. 12 Min.');
+
+    // --- Countdown-Text ---
+    pruefe('dauerText 45 Min.', L.dauerText(45 * 60000), '45 Min.');
+    pruefe('dauerText 2 Std.', L.dauerText(120 * 60000), '2 Std.');
+    pruefe('dauerText 20 Sek. → 1 Min.', L.dauerText(20000), '1 Min.');
+
+    // --- Sommer-/Winterzeit ---
+    pruefe('24.10.2026 Sommerzeit', L.istSommerzeit('2026-10-24', TZ), true);
+    pruefe('25.10.2026 Winterzeit (Umstellung)', L.istSommerzeit('2026-10-25', TZ), false);
+    pruefe('28.03.2026 Winterzeit', L.istSommerzeit('2026-03-28', TZ), false);
+    pruefe('29.03.2026 Sommerzeit', L.istSommerzeit('2026-03-29', TZ), true);
+    pruefe('Nacht der Umstellung: 24.10. 23:00 bis 25.10. 05:07 = 7 Std. 7 Min.',
+      L.dauerText(ms('2026-10-25', '05:07') - ms('2026-10-24', '23:00')), '7 Std. 7 Min.');
+    pruefe('Wanduhr 25.10.2026 12:00 bleibt 12:00', [w('2026-10-25', '12:00').h, w('2026-10-25', '12:00').mi], [12, 0]);
+    pruefe('Jumu\'ah-Zeit Fr 23.10.2026 (Sommer)', L.jumuahUhrzeit(CONFIG.JUMUAH, '2026-10-23', TZ), CONFIG.JUMUAH.uhrzeitSommer);
+    pruefe('Jumu\'ah-Zeit Fr 30.10.2026 (Winter)', L.jumuahUhrzeit(CONFIG.JUMUAH, '2026-10-30', TZ), CONFIG.JUMUAH.uhrzeitWinter);
+
+    // --- Jumu'ah-Ansicht ---
+    var A = { aktiv: true, zeitraeume: [{ wochentag: 4, von: '00:00', bis: '23:59' }], intervallSekunden: 180, anzeigeSekunden: 20 };
+    pruefe('Do 12:00:00 → Jumu\'ah-Ansicht an', L.jumuahAnsichtJetzt(w(DO, '12:00:00'), A), true);
+    pruefe('Do 12:00:19 → an', L.jumuahAnsichtJetzt(w(DO, '12:00:19'), A), true);
+    pruefe('Do 12:00:20 → aus', L.jumuahAnsichtJetzt(w(DO, '12:00:20'), A), false);
+    pruefe('Do 12:02:59 → aus', L.jumuahAnsichtJetzt(w(DO, '12:02:59'), A), false);
+    pruefe('Do 12:03:05 → wieder an', L.jumuahAnsichtJetzt(w(DO, '12:03:05'), A), true);
+    pruefe('Mi 12:00:00 → aus', L.jumuahAnsichtJetzt(w('2026-10-28', '12:00:00'), A), false);
+    pruefe('Fr 10:00:00 → aus (Standard: nur Donnerstag)', L.jumuahAnsichtJetzt(w(FR, '10:00:00'), A), false);
+    var A2 = JSON.parse(JSON.stringify(A));
+    A2.zeitraeume.push({ wochentag: 5, von: '00:00', bis: '12:00' });
+    pruefe('Mit Freitagvormittag: Fr 10:00:00 → an', L.jumuahAnsichtJetzt(w(FR, '10:00:00'), A2), true);
+    pruefe('Mit Freitagvormittag: Fr 12:03:00 → aus', L.jumuahAnsichtJetzt(w(FR, '12:03:00'), A2), false);
+    pruefe('Ansicht deaktiviert → aus', L.jumuahAnsichtJetzt(w(DO, '12:00:00'), { aktiv: false }), false);
+    pruefe('Nächster Freitag ab Do 29.10.', L.naechsterFreitag(DO), FR);
+    pruefe('Nächster Freitag ab Fr 30.10.', L.naechsterFreitag(FR), FR);
+    pruefe('Nächster Freitag ab Sa 31.10.', L.naechsterFreitag('2026-10-31'), '2026-11-06');
+
+    // --- Datum und Vers ---
+    pruefe('Datum deutsch', L.datumText('2026-10-25'), 'Sonntag, 25. Oktober 2026');
+    pruefe('Wochentag 29.10.2026 = Donnerstag', w(DO, '12:00').wochentag, 4);
+    pruefe('Hidschri-Datum enthält 1448', /1448 n\. H\.$/.test(L.hidschri('2026-10-25', 0, CONFIG.HIDSCHRI_MONATE)), true);
+    pruefe('Vers wechselt täglich', L.versDesTages(DO, CONFIG.VERSE) !== L.versDesTages(FR, CONFIG.VERSE), true);
+    pruefe('Vers gleich am selben Tag', L.versDesTages(DO, CONFIG.VERSE) === L.versDesTages(DO, CONFIG.VERSE), true);
+
+    var g = document.getElementById('gesamt');
+    g.textContent = fehler ? fehler + ' von ' + (ok + fehler) + ' Tests fehlgeschlagen' : 'Alle ' + ok + ' Tests bestanden';
+    g.className = fehler ? 'fehler' : 'ok';
+    document.title = (fehler ? 'FEHLER ' : 'OK ') + ok + '/' + (ok + fehler);
+  </script>
+</body>
+</html>

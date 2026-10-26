@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Designvergleich – Gebetsanzeige</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #111; color: #eee; font: 16px/1.3 system-ui, sans-serif; }
+    .leiste { padding: 10px 16px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .leiste a { color: #9cf; } .leiste input { font: inherit; padding: 4px 6px; }
+    .raster { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; padding: 0 10px 10px; height: calc(100% - 56px); box-sizing: border-box; }
+    figure { margin: 0; position: relative; background: #000; overflow: hidden; }
+    figure iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    figcaption { position: absolute; left: 8px; bottom: 8px; z-index: 2; background: rgba(0,0,0,.7); padding: 4px 10px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="leiste">
+    <strong>Alle Designs</strong>
+    <label>Simulierte Zeit: <input id="zeit" type="datetime-local" step="1"></label>
+    <label><input id="stream" type="checkbox"> mit Livestream</label>
+    <span>Ein Design im Vollbild: <a href="index.html?theme=1">1</a> · <a href="index.html?theme=2">2</a> · <a href="index.html?theme=3">3</a> · <a href="index.html?theme=4">4</a> · <a href="index.html?theme=5">5</a></span>
+  </div>
+  <div class="raster" id="raster"></div>
+  <script>
+    var designs = [[1, 'Nacht über Mekka'], [2, 'İznik'], [3, 'Smaragd & Gold'], [4, 'Minimal'], [5, 'Glas – hell', 'hell'], [5, 'Glas – dunkel', 'dunkel']];
+    var p = new URLSearchParams(location.search);
+    var zeit = document.getElementById('zeit'), stream = document.getElementById('stream');
+    zeit.value = p.get('now') || '';
+    stream.checked = p.get('stream') === 'an';
+    function aufbauen() {
+      var r = document.getElementById('raster'); r.innerHTML = '';
+      designs.forEach(function (d) {
+        var q = 'theme=' + d[0] + (d[2] ? '&modus=' + d[2] : '') + (zeit.value ? '&now=' + zeit.value : '') + (stream.checked ? '' : '&stream=aus');
+        r.insertAdjacentHTML('beforeend', '<figure><figcaption>' + d[0] + ' – ' + d[1] +
+          '</figcaption><iframe src="index.html?' + q + '"></iframe></figure>');
+      });
+    }
+    zeit.onchange = stream.onchange = aufbauen;
+    aufbauen();
+  </script>
+</body>
+</html>

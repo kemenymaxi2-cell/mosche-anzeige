@@ -1,0 +1,194 @@
+/* Die vier Designs. Umschalten mit ?theme=1 … 4 oder THEME in config.js. */
+
+/* =====================================================================
+   1 – „Nacht über Mekka“: Nachtblau, Gold, Glas-Karten
+   ===================================================================== */
+.theme-1 {
+  --verlauf: radial-gradient(ellipse 120% 90% at 25% 10%, #1d2c55 0%, #0c1430 50%, #04060e 100%);
+  --tint: 4, 8, 22;
+  --text: #f6f1e4;
+  --text-2: rgba(246, 241, 228, .70);
+  --akzent: #e3bb62;
+  --akzent-hell: #f0cd7d;
+  --glow: rgba(227, 187, 98, .55);
+  --font-titel: 'Cormorant Garamond', Georgia, serif;
+  --font-vers: 'Cormorant Garamond', Georgia, serif;
+  --font-zahl: 'Inter', system-ui, sans-serif;
+  --font-text: 'Inter', system-ui, sans-serif;
+  --uhr-gewicht: 200;
+  --karte-bg: linear-gradient(150deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .04) 60%);
+  --karte-rand: 1px solid rgba(255, 255, 255, .18);
+  --karte-radius: 30px;
+  --karte-schatten: 0 24px 60px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .14);
+  --naechstes-rand: rgba(227, 187, 98, .45);
+  --aktiv-bg: linear-gradient(170deg, rgba(227, 187, 98, .34), rgba(227, 187, 98, .12));
+  --aktiv-zeit: #fff3d6;
+}
+.theme-1 .vers-text { font-size: 46px; font-weight: 500; }
+.theme-1 .j-titel { font-size: 250px; letter-spacing: .01em; }
+.theme-1 .j-titel, .theme-1 .n-name { text-shadow: 0 0 40px rgba(227, 187, 98, .25); }
+
+/* =====================================================================
+   2 – „İznik“: Türkis, Kobalt, Cremeweiß, Ornamentbordüre
+   ===================================================================== */
+.theme-2 {
+  --verlauf: linear-gradient(160deg, #10427e 0%, #0a2d5c 55%, #061d3f 100%);
+  --tint: 7, 30, 68;
+  --text: #fbf5e6;
+  --text-2: rgba(251, 245, 230, .78);
+  --akzent: #12868a;
+  --akzent-hell: #5fd6cc;
+  --label: #12868a;
+  --glow: rgba(60, 193, 184, .7);
+  --font-titel: 'Marcellus', Georgia, serif;
+  --font-vers: 'Cormorant Garamond', Georgia, serif;
+  --font-zahl: 'Inter', system-ui, sans-serif;
+  --font-text: 'Inter', system-ui, sans-serif;
+  --titel-gewicht: 400;
+  --uhr-gewicht: 300;
+  --karte-bg: rgba(251, 246, 234, .94);
+  --karte-text: #163f8c;
+  --karte-text-2: #4a6a9c;
+  --karte-rand: 2px solid #3cc1b8;
+  --karte-radius: 18px;
+  --karte-schatten: inset 0 0 0 7px #fbf6ea, inset 0 0 0 9px rgba(216, 71, 59, .55), 0 18px 40px rgba(0, 0, 0, .3);
+  --kachel-radius: 120px 120px 18px 18px / 46px 46px 18px 18px;
+  --countdown: #c23a2f;
+  --quelle: #c23a2f;
+  --naechstes-rand: #c23a2f;
+  --aktiv-bg: linear-gradient(180deg, #1f56b5, #143f8c);
+  --aktiv-text: #fbf5e6;
+  --aktiv-text-2: #bfe9e4;
+  --kopf-text: #fbf5e6;
+  --j-titel: #fbf5e6;
+  --qr-vg: #143f8c;
+}
+.theme-2 #bg-muster { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='none' stroke='%239fe3dc' stroke-width='1.2'%3E%3Cg transform='translate(70 70)'%3E%3Ccircle r='10'/%3E%3Cellipse rx='7' ry='22' transform='rotate(0) translate(0 -24)'/%3E%3Cellipse rx='7' ry='22' transform='rotate(45) translate(0 -24)'/%3E%3Cellipse rx='7' ry='22' transform='rotate(90) translate(0 -24)'/%3E%3Cellipse rx='7' ry='22' transform='rotate(135) translate(0 -24)'/%3E%3Cellipse rx='7' ry='22' transform='rotate(180) translate(0 -24)'/%3E%3Cellipse rx='7' ry='22' transform='rotate(225) translate(0 -24)'/%3E%3Cellipse rx='7' ry='22' transform='rotate(270) translate(0 -24)'/%3E%3Cellipse rx='7' ry='22' transform='rotate(315) translate(0 -24)'/%3E%3C/g%3E%3Cpath d='M0 0 Q35 35 0 70 Q35 105 0 140 M140 0 Q105 35 140 70 Q105 105 140 140'/%3E%3C/g%3E%3C/svg%3E"); background-size: 140px; opacity: .07; }
+.theme-2 .rahmen-ornament { display: block; }
+.theme-2 .rahmen-ornament::before,
+.theme-2 .rahmen-ornament::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Crect width='120' height='40' fill='%230c3b7c'/%3E%3Crect width='120' height='3' fill='%233cc1b8'/%3E%3Crect y='37' width='120' height='3' fill='%233cc1b8'/%3E%3Crect y='5' width='120' height='1' fill='%23f4ead5' opacity='.6'/%3E%3Crect y='34' width='120' height='1' fill='%23f4ead5' opacity='.6'/%3E%3Cpath d='M0 20 C15 8 45 32 60 20 S105 8 120 20' fill='none' stroke='%23f4ead5' stroke-width='1.6'/%3E%3Cpath d='M14 15 q4 -7 10 -4 q-5 1 -10 4z M46 25 q-4 7 -10 4 q5 -1 10 -4z M74 15 q4 -7 10 -4 q-5 1 -10 4z M106 25 q-4 7 -10 4 q5 -1 10 -4z' fill='%233cc1b8'/%3E%3Cg transform='translate(30 20)'%3E%3Cpath d='M0 9 C-8 4 -8 -6 -4 -11 L0 -4 L4 -11 C8 -6 8 4 0 9Z' fill='%23d8473b'/%3E%3Cpath d='M0 9 V-2' stroke='%23f4ead5' stroke-width='1'/%3E%3C/g%3E%3Cg transform='translate(90 20)'%3E%3Cg fill='%233cc1b8'%3E%3Cellipse rx='3.6' ry='7' /%3E%3Cellipse rx='7' ry='3.6'/%3E%3C/g%3E%3Ccircle r='3.6' fill='%23d8473b'/%3E%3Ccircle r='1.4' fill='%23f4ead5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: auto 30px;
+  background-repeat: repeat-x;
+}
+.theme-2 .rahmen-ornament::before { top: 0; }
+.theme-2 .rahmen-ornament::after { bottom: 0; }
+.theme-2 #haupt { padding-top: 46px; padding-bottom: 52px; gap: 22px; }
+.theme-2 .gebete { height: 250px; }
+.theme-2 .gebet { padding-top: 14px; }
+.theme-2 .gebet.aktuell { border-color: #3cc1b8; box-shadow: inset 0 0 0 7px #1a4ea6, inset 0 0 0 9px #3cc1b8; }
+.theme-2 .jumuah-mini .jm-zeit { color: #5fd6cc; }
+.theme-2 .vers-text { font-size: 45px; font-weight: 600; }
+.theme-2 .j-untertitel { color: #5fd6cc; }
+.theme-2 .j-zeit { color: #fbf5e6; }
+.theme-2 .j-datum { color: rgba(251, 245, 230, .9); }
+.theme-2 .j-ornament {
+  display: block; height: 30px; width: 1200px; margin: 0 auto 50px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Crect width='120' height='40' fill='%230c3b7c'/%3E%3Crect width='120' height='3' fill='%233cc1b8'/%3E%3Crect y='37' width='120' height='3' fill='%233cc1b8'/%3E%3Crect y='5' width='120' height='1' fill='%23f4ead5' opacity='.6'/%3E%3Crect y='34' width='120' height='1' fill='%23f4ead5' opacity='.6'/%3E%3Cpath d='M0 20 C15 8 45 32 60 20 S105 8 120 20' fill='none' stroke='%23f4ead5' stroke-width='1.6'/%3E%3Cpath d='M14 15 q4 -7 10 -4 q-5 1 -10 4z M46 25 q-4 7 -10 4 q5 -1 10 -4z M74 15 q4 -7 10 -4 q-5 1 -10 4z M106 25 q-4 7 -10 4 q5 -1 10 -4z' fill='%233cc1b8'/%3E%3Cg transform='translate(30 20)'%3E%3Cpath d='M0 9 C-8 4 -8 -6 -4 -11 L0 -4 L4 -11 C8 -6 8 4 0 9Z' fill='%23d8473b'/%3E%3Cpath d='M0 9 V-2' stroke='%23f4ead5' stroke-width='1'/%3E%3C/g%3E%3Cg transform='translate(90 20)'%3E%3Cg fill='%233cc1b8'%3E%3Cellipse rx='3.6' ry='7' /%3E%3Cellipse rx='7' ry='3.6'/%3E%3C/g%3E%3Ccircle r='3.6' fill='%23d8473b'/%3E%3Ccircle r='1.4' fill='%23f4ead5'/%3E%3C/g%3E%3C/svg%3E"); background-size: auto 30px; background-position: center;
+  border-radius: 4px;
+}
+.theme-2 .j-ornament.unten { margin: 56px auto 0; }
+
+/* =====================================================================
+   3 – „Smaragd & Gold“: Smaragdgrün, Gold, Sternmuster
+   ===================================================================== */
+.theme-3 {
+  --verlauf: radial-gradient(ellipse 110% 90% at 50% 25%, #11523f 0%, #08301f 55%, #03170f 100%);
+  --tint: 3, 30, 21;
+  --text: #f5eedb;
+  --text-2: rgba(245, 238, 219, .72);
+  --akzent: #d8b45a;
+  --akzent-hell: #e8c873;
+  --glow: rgba(216, 180, 90, .6);
+  --font-titel: 'Cinzel', Georgia, serif;
+  --font-vers: 'Cormorant Garamond', Georgia, serif;
+  --font-zahl: 'Inter', system-ui, sans-serif;
+  --font-text: 'Inter', system-ui, sans-serif;
+  --titel-gewicht: 400;
+  --uhr-gewicht: 200;
+  --karte-bg: linear-gradient(180deg, rgba(5, 40, 30, .72), rgba(3, 26, 19, .72));
+  --karte-rand: 1px solid rgba(216, 180, 90, .75);
+  --karte-radius: 6px;
+  --karte-schatten: inset 0 0 0 6px rgba(3, 26, 19, .0), inset 0 0 0 7px rgba(216, 180, 90, .28), 0 20px 50px rgba(0, 0, 0, .35);
+  --naechstes-rand: rgba(216, 180, 90, 1);
+  --aktiv-bg: linear-gradient(180deg, #e2c069, #b8913a);
+  --aktiv-text: #062a1e;
+  --aktiv-text-2: #1d4434;
+  --qr-hg: #f5eedb;
+  --qr-vg: #06281d;
+}
+.theme-3 #bg-muster { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23d4af55' stroke-width='1.2'%3E%3Cpath d='M78.00,48.00 L69.21,56.79 L69.21,69.21 L56.79,69.21 L48.00,78.00 L39.21,69.21 L26.79,69.21 L26.79,56.79 L18.00,48.00 L26.79,39.21 L26.79,26.79 L39.21,26.79 L48.00,18.00 L56.79,26.79 L69.21,26.79 L69.21,39.21Z'/%3E%3Cpath d='M78.0 48.0H96M18.0 48.0H0M48.0 78.0V96M48.0 18.0V0M69.21 69.21L96 96M26.79 26.79L0 0M69.21 26.79L96 0M26.79 69.21L0 96'/%3E%3Cpath d='M58.16,52.21 L52.21,58.16 L43.79,58.16 L37.84,52.21 L37.84,43.79 L43.79,37.84 L52.21,37.84 L58.16,43.79Z'/%3E%3C/g%3E%3C/svg%3E"); background-size: 96px; opacity: .10; }
+.theme-3 .g-name { font-size: 50px; }
+.theme-3 .n-name { font-size: 92px; }
+.theme-3 .label { letter-spacing: .24em; }
+.theme-3 .vers-text { font-size: 45px; font-weight: 500; }
+.theme-3 .karte::before, .theme-3 .gebet::before {
+  /* kleine Rauten als Eckschmuck */
+  content: ""; position: absolute; left: 50%; top: -8px; width: 14px; height: 14px;
+  transform: translateX(-50%) rotate(45deg);
+  background: #d8b45a; box-shadow: 0 0 0 4px #062a1e;
+}
+.theme-3 .gebet.aktuell::before { background: #fff3cf; }
+.theme-3 .j-titel { font-size: 200px; }
+.theme-3 .j-inhalt { padding: 70px 140px; border: 1px solid rgba(216, 180, 90, .7); box-shadow: inset 0 0 0 10px rgba(3, 26, 19, 0), inset 0 0 0 11px rgba(216, 180, 90, .35); background: rgba(4, 32, 23, .55); }
+
+/* =====================================================================
+   4 – „Minimal“: maximale Lesbarkeit, dünne Ziffern, fast monochrom
+   ===================================================================== */
+.theme-4 {
+  --verlauf: linear-gradient(180deg, #1d2024 0%, #131518 100%);
+  --tint: 14, 16, 19;
+  --abdunklung-wert: min(1, calc(var(--abdunklung) * 1.3));
+  --text: #f4f4f2;
+  --text-2: #9ea3a8;
+  --akzent: #4fd1c5;
+  --glow: rgba(79, 209, 197, .35);
+  --font-titel: 'Inter', system-ui, sans-serif;
+  --font-vers: 'Inter', system-ui, sans-serif;
+  --font-zahl: 'Inter', system-ui, sans-serif;
+  --font-text: 'Inter', system-ui, sans-serif;
+  --titel-gewicht: 300;
+  --uhr-gewicht: 100;
+  --uhr-sek-gewicht: 200;
+  --zeit-gewicht: 200;
+  --uhr-groesse: 268px;
+  --vers-stil: normal;
+  --karte-bg: transparent;
+  --karte-rand: 0;
+  --karte-radius: 0;
+  --label: #9ea3a8;
+  --countdown: #f4f4f2;
+  --quelle: #9ea3a8;
+  --kachel-bg: transparent;
+  --kachel-rand: 0;
+  --naechstes-rand: transparent;
+  --aktiv-bg: rgba(79, 209, 197, .07);
+  --aktiv-zeit: #4fd1c5;
+}
+.theme-4 #haupt { padding: 40px 96px 48px; }
+.theme-4 .uhr-karte { padding: 0; }
+.theme-4 .naechstes-karte { padding: 0 0 0 56px; border-left: 1px solid rgba(255, 255, 255, .14); }
+.theme-4 .n-countdown { font-weight: 300; font-size: 60px; }
+.theme-4 .datum { font-weight: 300; font-size: 48px; }
+.theme-4 .gebete { gap: 0; border-top: 1px solid rgba(255, 255, 255, .14); border-bottom: 1px solid rgba(255, 255, 255, .14); }
+.theme-4 .gebet + .gebet { border-left: 1px solid rgba(255, 255, 255, .10); }
+.theme-4 .gebet.aktuell { transform: none; }
+.theme-4 .gebet.aktuell::after {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 6px; background: var(--akzent);
+}
+.theme-4 .gebet.aktuell .g-name { color: var(--akzent); }
+.theme-4 .gebet.aktuell .g-zeit { font-weight: 300; text-shadow: 0 0 30px rgba(79, 209, 197, .35); }
+.theme-4 .g-glow { box-shadow: none; background: radial-gradient(ellipse at 50% 0%, rgba(79, 209, 197, .16), transparent 70%); }
+.theme-4 .gebet.naechstes .g-name::after { content: " ›"; color: var(--akzent); }
+.theme-4 .g-zeit { font-size: 84px; }
+.theme-4 .g-name { font-size: 50px; }
+.theme-4 .vers-karte { padding: 0 48px 0 0; }
+.theme-4 .vers-text { font-weight: 300; font-size: 38px; }
+.theme-4 .insta-karte { padding: 0 0 0 48px; border-left: 1px solid rgba(255, 255, 255, .14); }
+.theme-4 .qr { border-radius: 4px; }
+.theme-4 .moschee-name { font-weight: 400; font-size: 30px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-2); }
+.theme-4 .j-titel { font-weight: 200; font-size: 230px; color: var(--text); }
+.theme-4 .j-untertitel { letter-spacing: .4em; font-size: 56px; }
+.theme-4 .j-zeit { font-weight: 100; font-size: 340px; color: var(--akzent); }
+.theme-4 .j-datum { font-weight: 300; }

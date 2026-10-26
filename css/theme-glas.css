@@ -1,0 +1,269 @@
+/* =====================================================================
+   5 – „Glas“: Apple-Stil mit Liquid Glass, DITIB-Rot sparsam,
+   hell (tagsüber) und dunkel (abends) – umgeschaltet per Klasse
+   modus-hell / modus-dunkel auf <body>.
+   ===================================================================== */
+
+/* Farben als registrierte Eigenschaften, damit der Hell/Dunkel-Wechsel
+   weich überblendet statt hart umzuspringen. */
+@property --g-text      { syntax: '<color>'; inherits: true; initial-value: #f5f5f7; }
+@property --g-text-2    { syntax: '<color>'; inherits: true; initial-value: rgba(235, 235, 245, .62); }
+@property --g-glas-1    { syntax: '<color>'; inherits: true; initial-value: rgba(255, 255, 255, .16); }
+@property --g-glas-2    { syntax: '<color>'; inherits: true; initial-value: rgba(255, 255, 255, .06); }
+@property --g-rand      { syntax: '<color>'; inherits: true; initial-value: rgba(255, 255, 255, .45); }
+@property --g-pille     { syntax: '<color>'; inherits: true; initial-value: rgba(255, 255, 255, .20); }
+@property --g-trenner   { syntax: '<color>'; inherits: true; initial-value: rgba(255, 255, 255, .14); }
+@property --g-schatten  { syntax: '<color>'; inherits: true; initial-value: rgba(0, 0, 0, .35); }
+@property --g-rot       { syntax: '<color>'; inherits: true; initial-value: #ff3b45; }
+
+.theme-5 {
+  --font-titel: 'Inter Opsz', 'Inter', system-ui, sans-serif;
+  --font-vers: 'Inter Opsz', 'Inter', system-ui, sans-serif;
+  --font-zahl: 'Inter Opsz', 'Inter', system-ui, sans-serif;
+  --font-text: 'Inter Opsz', 'Inter', system-ui, sans-serif;
+  font-optical-sizing: auto;
+  --tint: 0, 0, 0;
+
+  --text: var(--g-text);
+  --text-2: var(--g-text-2);
+  --akzent: var(--g-rot);
+  --label: var(--g-text-2);
+  --countdown: var(--g-rot);
+  --quelle: var(--g-text-2);
+  --glow: transparent;
+  --karte-bg: transparent;
+  --karte-rand: 0;
+  --karte-schatten: none;
+  --kachel-bg: transparent;
+  --kachel-rand: 0;
+  --naechstes-rand: transparent;
+  --aktiv-bg: var(--g-pille);
+  --uhr-gewicht: 600;
+  --uhr-sek-gewicht: 500;
+  --titel-gewicht: 600;
+  --zeit-gewicht: 600;
+  --vers-stil: normal;
+
+  /* Glas */
+  --glas-flaeche: linear-gradient(180deg, var(--g-glas-1), var(--g-glas-2));
+  --glas-schatten:
+    inset 0 1px 0 var(--g-rand),
+    inset 0 0 0 1px rgba(255, 255, 255, .10),
+    inset 0 14px 28px -16px rgba(255, 255, 255, .45),
+    inset 0 -12px 24px -18px rgba(255, 255, 255, .25),
+    0 30px 70px -20px var(--g-schatten),
+    0 2px 8px rgba(0, 0, 0, .06);
+
+  transition: --g-text 3s ease, --g-text-2 3s ease, --g-glas-1 3s ease, --g-glas-2 3s ease,
+              --g-rand 3s ease, --g-pille 3s ease, --g-trenner 3s ease, --g-schatten 3s ease, --g-rot 3s ease;
+}
+
+/* ---------- Hell (tagsüber) ---------- */
+.theme-5.modus-hell {
+  --g-text: #1d1d1f;
+  --g-text-2: rgba(60, 60, 67, .66);
+  --g-glas-1: rgba(255, 255, 255, .66);
+  --g-glas-2: rgba(255, 255, 255, .40);
+  --g-rand: rgba(255, 255, 255, .95);
+  --g-pille: rgba(255, 255, 255, .95);
+  --g-trenner: rgba(60, 60, 67, .16);
+  --g-schatten: rgba(30, 30, 50, .20);
+  --g-rot: #e40613;
+  --tint: 242, 242, 247;
+  --abdunklung-wert: var(--schleier-hell, .55);
+}
+/* ---------- Dunkel (abends und nachts) ---------- */
+.theme-5.modus-dunkel {
+  --tint: 0, 0, 0;
+  --abdunklung-wert: var(--schleier-dunkel, .5);
+}
+
+/* ---------- Hintergrund ohne Stream: ruhige, weiche Farbflächen ---------- */
+.theme-5 #bg-verlauf {
+  background:
+    radial-gradient(circle at 14% 22%, #ffd6d3 0, rgba(255, 214, 211, 0) 38%),
+    radial-gradient(circle at 86% 26%, #d9e6ff 0, rgba(217, 230, 255, 0) 44%),
+    radial-gradient(circle at 62% 92%, #ffe7cf 0, rgba(255, 231, 207, 0) 46%),
+    #f2f2f7;
+}
+.theme-5 #bg-verlauf::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 16% 24%, rgba(228, 6, 19, .26) 0, rgba(228, 6, 19, 0) 40%),
+    radial-gradient(circle at 86% 78%, rgba(48, 78, 150, .50) 0, rgba(48, 78, 150, 0) 48%),
+    radial-gradient(circle at 58% 8%, rgba(255, 255, 255, .07) 0, rgba(255, 255, 255, 0) 40%),
+    #0a0a0e;
+  opacity: 1;
+  transition: opacity 3s ease;
+}
+.theme-5.modus-hell #bg-verlauf::after { opacity: 0; }
+.theme-5 #bg-abdunklung { transition: opacity 3s ease, background-color 3s ease; }
+
+/* ---------- Glasflächen ---------- */
+.theme-5 .gebete,
+.theme-5 .unten,
+.theme-5 .jumuah-mini,
+.theme-5 .j-inhalt {
+  position: relative;
+  background: var(--glas-flaeche);
+  box-shadow: var(--glas-schatten);
+  -webkit-backdrop-filter: blur(var(--glas-blur, 30px)) saturate(170%);
+  backdrop-filter: blur(var(--glas-blur, 30px)) saturate(170%);
+}
+/* Lichtkante: oben links hell, unten rechts schwächer – wie gebogenes Glas */
+.theme-5 .gebete::after,
+.theme-5 .unten::after,
+.theme-5 .jumuah-mini::after,
+.theme-5 .j-inhalt::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(150deg, var(--g-rand), rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0) 70%, var(--g-rand));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: .8;
+}
+
+/* ---------- Kopfzeile mit Logo ---------- */
+.marke { display: flex; align-items: center; gap: 20px; }
+.logo-glas { display: none; position: relative; }
+.theme-5 .logo-glas { display: block; }
+.theme-5.ohne-logo .logo-glas { display: none; }
+.logo {
+  position: absolute; inset: 0;
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  /* rotes Glas: Glanzlicht oben, kräftiges DITIB-Rot, unten etwas dunkler */
+  background:
+    linear-gradient(168deg, rgba(255, 255, 255, .60) 0%, rgba(255, 255, 255, .14) 30%, rgba(255, 255, 255, 0) 48%),
+    linear-gradient(180deg, rgba(248, 50, 60, .92) 0%, rgba(228, 6, 19, .88) 55%, rgba(176, 0, 12, .92) 100%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+}
+.logo.logo-bild { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.logo.logo-bild img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.theme-5 .kopf .logo-glas { width: 104px; height: 58px; filter: drop-shadow(0 8px 16px rgba(228, 6, 19, .30)); }
+
+.theme-5 .kopf { height: 64px; }
+.theme-5 .moschee-name {
+  font-size: 31px; font-weight: 600; letter-spacing: -.012em;
+  color: var(--text); text-transform: none;
+}
+.theme-5 .jumuah-mini {
+  height: 60px; padding: 0 28px;
+  display: flex; align-items: center;
+  border-radius: 999px;
+  font-size: 25px; font-weight: 500; letter-spacing: 0;
+  color: var(--text-2);
+}
+.theme-5 .jumuah-mini:empty { display: none; }
+.theme-5 .jumuah-mini .jm-tag { color: var(--text); }
+.theme-5 .jumuah-mini .jm-zeit { font-family: var(--font-zahl); font-weight: 600; color: var(--text); letter-spacing: -.01em; }
+
+/* ---------- Uhr, Datum, nächstes Gebet: frei, ohne Karten ---------- */
+.theme-5 #haupt { padding: 40px 80px 52px; gap: 30px; }
+.theme-5 .oben { grid-template-columns: 1fr 620px; }
+.theme-5 .uhr-karte { padding: 0 0 0 4px; }
+.theme-5 .datum {
+  order: -1;                      /* Datum über der Uhr, wie auf dem Sperrbildschirm */
+  margin: 0 0 6px 6px;
+  font-size: 40px; font-weight: 600; letter-spacing: -.015em;
+  color: var(--text);
+}
+.theme-5 .uhr { font-size: 268px; letter-spacing: -.045em; line-height: .88; }
+.theme-5 .uhr .sek { font-size: .27em; letter-spacing: -.02em; margin-left: 20px; color: var(--text-2); }
+.theme-5 .hidschri { margin: 18px 0 0 6px; font-size: 32px; font-weight: 500; color: var(--text-2); }
+
+.theme-5 .label { font-size: 28px; font-weight: 600; letter-spacing: -.005em; text-transform: none; }
+.theme-5 .naechstes-karte { padding: 0; }
+.theme-5 .n-name { margin-top: 2px; font-size: 124px; font-weight: 700; letter-spacing: -.04em; }
+.theme-5 .n-deutsch { font-size: 30px; font-weight: 500; margin-top: 0; }
+.theme-5 .n-countdown { margin-top: 22px; font-size: 56px; font-weight: 600; letter-spacing: -.025em; }
+.theme-5 .n-hinweis { font-size: 26px; font-weight: 500; }
+
+/* ---------- Gebetszeiten: eine Glasleiste, aktuelles Gebet als Kapsel ---------- */
+.theme-5 .gebete {
+  height: 228px;
+  gap: 0;
+  padding: 14px;
+  border-radius: 52px;
+}
+.theme-5 .gebet {
+  border-radius: 40px;
+  box-shadow: none;
+  transform: none;
+  transition: background 1s ease, box-shadow 1s ease;
+}
+.theme-5 .gebet + .gebet::before {
+  content: ""; position: absolute; left: 0; top: 26%; bottom: 26%; width: 1px;
+  background: var(--g-trenner);
+  transition: opacity 1s ease;
+}
+.theme-5 .gebet.aktuell::before,
+.theme-5 .gebet.aktuell + .gebet::before { opacity: 0; }
+.theme-5 .g-glow { display: none; }
+.theme-5 .g-name { font-size: 46px; font-weight: 600; letter-spacing: -.022em; }
+.theme-5 .g-deutsch { font-size: 22px; font-weight: 500; margin-top: 2px; }
+.theme-5 .g-zeit { margin-top: 14px; font-size: 76px; font-weight: 600; letter-spacing: -.035em; }
+.theme-5 .gebet.kein-gebet .g-name,
+.theme-5 .gebet.kein-gebet .g-zeit { opacity: 1; color: var(--text-2); }
+
+.theme-5 .gebet.aktuell {
+  transform: none;
+  background: var(--g-pille);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .7),
+    inset 0 0 0 1px rgba(255, 255, 255, .18),
+    0 10px 30px -8px var(--g-schatten);
+  color: var(--text);
+}
+.theme-5 .gebet.aktuell .g-deutsch { color: var(--text-2); }
+.theme-5 .gebet.aktuell .g-zeit { color: var(--g-rot); }
+.theme-5 .gebet.aktuell .g-name::before {
+  content: "";
+  display: inline-block;
+  width: 13px; height: 13px; margin-right: 12px;
+  border-radius: 50%;
+  background: var(--g-rot);
+  vertical-align: middle;
+  transform: translateY(-5px);
+}
+
+/* ---------- Unten: eine Glasfläche für Vers und QR-Codes ---------- */
+.theme-5 .unten {
+  height: 226px;
+  grid-template-columns: 1fr auto;
+  gap: 0;
+  border-radius: 44px;
+}
+.theme-5 .vers-karte { padding: 22px 52px; }
+.theme-5 .vers-text { margin: 8px 0; font-size: 38px; font-weight: 500; letter-spacing: -.012em; line-height: 1.28; }
+.theme-5 .vers-quelle { font-size: 24px; font-weight: 500; letter-spacing: 0; }
+.theme-5 .insta-karte {
+  grid-template-columns: auto auto auto;
+  gap: 28px;
+  padding: 12px 40px 12px 44px;
+  border-left: 1px solid var(--g-trenner);
+  border-radius: 0;
+}
+.theme-5 .insta-karte .label { line-height: 1.25; max-width: 150px; }
+.theme-5 .qr { width: 132px; height: 132px; border-radius: 22px; box-shadow: 0 6px 18px -6px rgba(0, 0, 0, .25); }
+.theme-5 .qr-titel { font-size: 19px; font-weight: 500; text-transform: none; letter-spacing: 0; }
+.theme-5 .handle { font-size: 23px; font-weight: 600; letter-spacing: -.01em; }
+.theme-5 .qr-block figcaption { margin-top: 8px; }
+
+/* ---------- Jumu'ah-Ansicht ---------- */
+.j-logo { display: none; }
+.theme-5 .j-inhalt {
+  padding: 64px 150px 76px;
+  border-radius: 72px;
+}
+.theme-5 .j-logo { display: block; width: 186px; height: 104px; margin: 0 auto 30px; filter: drop-shadow(0 12px 24px rgba(228, 6, 19, .32)); }
+.theme-5 .j-titel { font-size: 150px; font-weight: 700; letter-spacing: -.045em; color: var(--text); }
+.theme-5 .j-untertitel { margin-top: 0; font-size: 44px; font-weight: 500; letter-spacing: -.01em; text-transform: none; }
+.theme-5 .j-zeit { margin-top: 22px; font-size: 290px; font-weight: 600; letter-spacing: -.055em; line-height: .95; }
+.theme-5 .j-datum { margin-top: 26px; font-size: 44px; font-weight: 500; color: var(--text-2); letter-spacing: -.01em; }
+.theme-5 .j-wann { color: var(--g-rot); font-weight: 600; }

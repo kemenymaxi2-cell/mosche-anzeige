@@ -1,0 +1,305 @@
+/* Grundlayout (für alle Designs gleich). Farben/Schriften kommen aus themes.css.
+   Die Bühne ist fest 1920×1080 Pixel groß und wird auf den Bildschirm skaliert. */
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  cursor: none;
+}
+body {
+  font-family: var(--font-text);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+* { box-sizing: border-box; }
+
+/* ---------- Hintergrund ---------- */
+
+#hintergrund { position: fixed; inset: 0; overflow: hidden; z-index: 0; }
+#hintergrund > div { position: absolute; inset: 0; }
+#bg-verlauf { background: var(--verlauf); }
+#bg-bild { background-size: cover; background-position: center; opacity: 0; transition: opacity 2s ease; }
+.hat-bild #bg-bild { opacity: 1; }
+#stream-huelle { opacity: 0; transition: opacity 3s ease; }
+#stream-huelle.sichtbar { opacity: 1; }
+#stream-huelle iframe {
+  position: absolute; left: 50%; top: 50%;
+  border: 0; pointer-events: none;
+  transform-origin: center center;
+}
+/* Abdunklung nur über Stream oder Bild – der Farbverlauf ist schon dunkel genug */
+#bg-abdunklung {
+  background: rgb(var(--tint));
+  opacity: 0;
+  transition: opacity 3s ease;
+}
+.hat-bild #bg-abdunklung,
+#stream-huelle.sichtbar ~ #bg-abdunklung { opacity: var(--abdunklung-wert, var(--abdunklung)); }
+#bg-muster { pointer-events: none; }
+
+/* ---------- Bühne und Ansichten ---------- */
+
+#buehne {
+  position: fixed; left: 50%; top: 50%;
+  width: 1920px; height: 1080px;
+  transform-origin: center center;
+  z-index: 1;
+}
+.ansicht {
+  position: absolute; inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(var(--versatz-x, 0px), var(--versatz-y, 0px));
+  transition: opacity var(--ueberblendung, 1500ms) ease-in-out,
+              visibility 0s linear var(--ueberblendung, 1500ms),
+              transform 40s ease-in-out;
+}
+.ansicht.sichtbar {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--ueberblendung, 1500ms) ease-in-out, visibility 0s, transform 40s ease-in-out;
+}
+.rahmen-ornament { display: none; position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+
+/* Zahlen springen nicht */
+.uhr, .g-zeit, .n-countdown, .n-hinweis, .j-zeit, .jm-zeit { font-variant-numeric: tabular-nums; }
+
+/* ---------- Hauptbildschirm ---------- */
+
+#haupt {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 36px 72px 44px;
+}
+
+.kopf {
+  height: 46px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 30px;
+  letter-spacing: .06em;
+  color: var(--kopf-text, var(--text-2));
+}
+.moschee-name { font-family: var(--font-titel); font-size: 34px; color: var(--kopf-text, var(--text)); }
+.jumuah-mini .jm-label { opacity: .85; }
+.jumuah-mini .jm-tag { margin-left: 10px; }
+.jumuah-mini .jm-zeit { margin-left: 10px; font-family: var(--font-zahl); font-weight: 600; color: var(--akzent-hell, var(--akzent)); }
+
+.karte {
+  position: relative;
+  background: var(--karte-bg);
+  border: var(--karte-rand);
+  border-radius: var(--karte-radius, 24px);
+  box-shadow: var(--karte-schatten, none);
+  color: var(--karte-text, var(--text));
+}
+.label {
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--label, var(--akzent));
+}
+
+.oben {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 700px;
+  gap: 32px;
+  min-height: 0;
+}
+.uhr-karte {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 20px 56px;
+}
+.uhr {
+  display: flex; align-items: baseline;
+  font-family: var(--font-zahl);
+  font-weight: var(--uhr-gewicht, 300);
+  font-size: var(--uhr-groesse, 228px);
+  line-height: .92;
+  letter-spacing: -.02em;
+}
+.uhr .sek {
+  font-size: .36em;
+  margin-left: 22px;
+  color: var(--karte-text-2, var(--text-2));
+  font-weight: var(--uhr-sek-gewicht, 300);
+}
+.datum {
+  margin-top: 18px;
+  font-family: var(--font-titel);
+  font-size: 50px;
+  line-height: 1.15;
+}
+.hidschri {
+  margin-top: 4px;
+  font-size: 36px;
+  color: var(--karte-text-2, var(--text-2));
+}
+
+.naechstes-karte {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 26px 48px;
+}
+.n-name {
+  margin-top: 6px;
+  font-family: var(--font-titel);
+  font-weight: var(--titel-gewicht, 600);
+  font-size: 104px;
+  line-height: 1;
+}
+.n-deutsch { font-size: 32px; color: var(--karte-text-2, var(--text-2)); margin-top: 4px; }
+.n-countdown {
+  margin-top: 18px;
+  font-family: var(--font-zahl);
+  font-size: 54px;
+  font-weight: 500;
+  color: var(--countdown, var(--akzent));
+}
+.n-hinweis { margin-top: 6px; font-size: 28px; color: var(--karte-text-2, var(--text-2)); min-height: 34px; }
+
+/* ---------- Gebetszeiten ---------- */
+
+.gebete {
+  height: 256px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+}
+.gebet {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--kachel-bg, var(--karte-bg));
+  border: var(--kachel-rand, var(--karte-rand));
+  border-radius: var(--kachel-radius, var(--karte-radius, 24px));
+  box-shadow: var(--karte-schatten, none);
+  color: var(--karte-text, var(--text));
+  transition: transform 1.2s ease, background 1.2s ease, color 1.2s ease, border-color 1.2s ease;
+}
+.g-glow {
+  position: absolute; inset: -3px;
+  border-radius: inherit;
+  box-shadow: 0 0 46px 6px var(--glow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+}
+.g-name {
+  font-family: var(--font-titel);
+  font-weight: var(--titel-gewicht, 600);
+  font-size: 58px;
+  line-height: 1.05;
+}
+.g-deutsch { font-size: 25px; color: var(--karte-text-2, var(--text-2)); margin-top: 4px; }
+.g-zeit {
+  margin-top: 14px;
+  font-family: var(--font-zahl);
+  font-size: 78px;
+  font-weight: var(--zeit-gewicht, 500);
+  line-height: 1;
+}
+.gebet.kein-gebet .g-name, .gebet.kein-gebet .g-zeit { opacity: .78; }
+
+.gebet.naechstes { border-color: var(--naechstes-rand, var(--akzent)); }
+
+.gebet.aktuell {
+  transform: scale(1.07);
+  background: var(--aktiv-bg);
+  border-color: var(--akzent);
+  color: var(--aktiv-text, var(--text));
+  z-index: 1;
+}
+.gebet.aktuell .g-deutsch { color: var(--aktiv-text-2, var(--aktiv-text, var(--text))); }
+.gebet.aktuell .g-zeit { color: var(--aktiv-zeit, inherit); }
+.gebet.aktuell .g-glow { opacity: 1; animation: puls 5s ease-in-out infinite; }
+@keyframes puls { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+
+/* ---------- Unten: Vers und Instagram ---------- */
+
+.unten {
+  height: 252px;
+  display: grid;
+  grid-template-columns: 1fr 700px;
+  gap: 32px;
+}
+.vers-karte {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 24px 52px;
+  overflow: hidden;
+}
+.vers-text {
+  margin: 12px 0 10px;
+  font-family: var(--font-vers, var(--font-titel));
+  font-style: var(--vers-stil, italic);
+  font-size: 41px;
+  line-height: 1.28;
+}
+.vers-quelle { font-size: 26px; color: var(--quelle, var(--akzent)); letter-spacing: .04em; }
+
+.insta-karte {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 30px;
+  padding: 18px 36px;
+}
+.insta-karte .label { line-height: 1.35; }
+.qr-reihe { display: contents; }
+.qr-block { margin: 0; display: flex; flex-direction: column; align-items: center; }
+.qr {
+  width: 168px; height: 168px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--qr-hg, #fff);
+}
+.qr svg { width: 100%; height: 100%; display: block; }
+.qr .qr-hg { fill: var(--qr-hg, #fff); }
+.qr .qr-vg { fill: var(--qr-vg, #111); }
+.qr-block figcaption { display: flex; flex-direction: column; align-items: center; margin-top: 8px; line-height: 1.15; }
+.qr-titel { font-size: 20px; color: var(--karte-text-2, var(--text-2)); text-transform: uppercase; letter-spacing: .12em; }
+.handle { font-size: 26px; font-weight: 600; }
+
+/* ---------- Jumu'ah-Sonderansicht ---------- */
+
+#jumuah { display: flex; align-items: center; justify-content: center; }
+.j-inhalt { text-align: center; position: relative; }
+.j-titel {
+  font-family: var(--font-titel);
+  font-weight: var(--titel-gewicht, 600);
+  font-size: 220px;
+  line-height: 1;
+  color: var(--j-titel, var(--akzent));
+}
+.j-untertitel {
+  margin-top: 10px;
+  font-size: 68px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.j-zeit {
+  margin-top: 40px;
+  font-family: var(--font-zahl);
+  font-weight: var(--uhr-gewicht, 300);
+  font-size: 300px;
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.j-datum { margin-top: 34px; font-family: var(--font-titel); font-size: 60px; color: var(--text); }
+.j-ornament { display: none; }
+
+/* ---------- Simulationshinweis ---------- */
+
+#sim-hinweis {
+  display: none;
+  position: absolute; left: 50%; top: 8px; transform: translateX(-50%); z-index: 5;
+  padding: 6px 14px;
+  font: 600 20px/1.2 var(--font-zahl);
+  color: #fff; background: rgba(190, 30, 30, .8);
+  border-radius: 8px;
+}
+.simulation #sim-hinweis { display: block; }
