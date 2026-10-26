@@ -146,7 +146,7 @@ window.CONFIG = {
     // von / bis: Uhrzeit im Format "HH:MM"
     zeitraeume: [
       { wochentag: 4, von: "00:00", bis: "23:59" },   // Donnerstag ganztags
-      // { wochentag: 5, von: "00:00", bis: "12:00" }, // Freitagvormittag (Zeile aktivieren: // am Anfang entfernen)
+       { wochentag: 5, von: "00:00", bis: "14:30" }, // Freitagvormittag (Zeile aktivieren: // am Anfang entfernen)
     ],
 
     // Alle wie viele Sekunden erscheint die Sonderansicht? (180 = 3 Minuten)
@@ -174,7 +174,7 @@ window.CONFIG = {
   // WhatsApp-Kanal: den kompletten Link eintragen (in WhatsApp: Kanal öffnen →
   // Kanalname antippen → „Link teilen“ → „Link kopieren“).
   // Leer lassen ("") = kein WhatsApp-QR-Code.
-  WHATSAPP_KANAL: "https://whatsapp.com/channel/PLATZHALTER",
+  WHATSAPP_KANAL: "https://whatsapp.com/channel/0029VbByAkR0lwgsquR6LW03",
   WHATSAPP_KANAL_TITEL: "WhatsApp",
   WHATSAPP_KANAL_TEXT: "Kanal folgen",
 
