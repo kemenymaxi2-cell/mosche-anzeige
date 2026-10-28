@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2026-10-28d';   // bei jeder Änderung erhöhen (auch in index.html)
+  var VERSION = '2026-10-28e';   // bei jeder Änderung erhöhen (auch in index.html)
   var CFG = window.CONFIG, L = window.Logik, TZ = CFG.ZEITZONE || 'Europe/Berlin';
   var param = new URLSearchParams(location.search);
   var $ = function (id) { return document.getElementById(id); };
@@ -47,14 +47,20 @@
       el.lastChild.src = CFG.LOGO_NACHT || CFG.LOGO_TAG;
     });
   } else if (CFG.LOGO) {
-    Array.prototype.forEach.call(document.querySelectorAll('.logo'), function (el) {
-      if (location.protocol === 'file:') {
-        // Per Doppelklick geöffnet: Masken aus Dateien sind gesperrt → Logo als Bild zeigen
-        el.classList.add('logo-bild');
-        el.innerHTML = '<img alt="" src="' + CFG.LOGO + '">';
-      } else {
-        el.style.webkitMaskImage = el.style.maskImage = 'url("' + CFG.LOGO + '")';
-      }
+    // Rotes Glas-Oval (Logo mit ausgestanzter Schrift) und darunter – falls eingetragen –
+    // die Schrift in Weiß (LOGO_SCHRIFT). Ohne LOGO_SCHRIFT bleibt die Schrift durchsichtig.
+    var teile = [['.logo', CFG.LOGO], ['.logo-schrift', CFG.LOGO_SCHRIFT]];
+    teile.forEach(function (t) {
+      Array.prototype.forEach.call(document.querySelectorAll(t[0]), function (el) {
+        if (!t[1]) { el.style.display = 'none'; return; }
+        if (location.protocol === 'file:') {
+          // Per Doppelklick geöffnet: Masken aus Dateien sind gesperrt → Logo als Bild zeigen
+          el.classList.add('logo-bild');
+          el.innerHTML = '<img alt="" src="' + t[1] + '">';
+        } else {
+          el.style.webkitMaskImage = el.style.maskImage = 'url("' + t[1] + '")';
+        }
+      });
     });
   } else document.body.classList.add('ohne-logo');
 

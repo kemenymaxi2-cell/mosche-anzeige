@@ -51,6 +51,8 @@ window.CONFIG = {
   // Logo (wird in Design 5 oben links und in der Jumu'ah-Ansicht gezeigt).
   // Am besten eine SVG-Datei, bei der die Buchstaben ausgestanzt (transparent) sind.
   LOGO: "assets/ditib-logo.svg",
+  // Schrift im Logo: weiß ("assets/ditib-logo-schrift.svg") oder durchsichtig ("").
+  LOGO_SCHRIFT: "assets/ditib-logo-schrift.svg",
 
   // Optional: eigenes mehrfarbiges Logo für Tag- und Nachtmodus (nur Design 5).
   // Sind beide eingetragen, werden sie statt LOGO angezeigt und wechseln

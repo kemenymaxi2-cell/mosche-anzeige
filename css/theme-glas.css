@@ -143,6 +143,16 @@
   -webkit-backdrop-filter: blur(14px) saturate(160%);
   backdrop-filter: blur(14px) saturate(160%);
 }
+/* Weiße Schrift unter dem roten Glas – leicht glänzend wie Emaille */
+.logo-schrift {
+  position: absolute; inset: 0;
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #ececf0 100%);
+}
+.logo-schrift.logo-bild { background: none; }
+.logo-schrift.logo-bild img { width: 100%; height: 100%; display: block; object-fit: contain; }
 .logo.logo-bild { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 .logo.logo-bild img { width: 100%; height: 100%; display: block; object-fit: contain; }
 .theme-5 .kopf .logo-glas { width: 104px; height: 58px; filter: drop-shadow(0 8px 16px rgba(228, 6, 19, .30)); }
