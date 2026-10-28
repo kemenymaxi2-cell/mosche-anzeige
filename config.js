@@ -171,7 +171,7 @@ window.CONFIG = {
     ],
 
     // Alle wie viele Sekunden erscheint die Sonderansicht? (180 = 3 Minuten)
-    intervallSekunden: 120,
+    intervallSekunden: 190,
 
     // Wie viele Sekunden bleibt sie stehen?
     anzeigeSekunden: 20,
