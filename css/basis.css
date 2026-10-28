@@ -329,3 +329,14 @@ body {
 .qr-symbol .voll { fill: currentColor; stroke: none; }
 .handle { text-align: center; }
 .h-trenner { opacity: .55; }
+
+/* Diagnosezeile (?diagnose=1) */
+#diagnose {
+  display: none;
+  position: absolute; left: 16px; right: 16px; bottom: 8px; z-index: 6;
+  padding: 8px 14px;
+  font: 500 19px/1.3 'Inter', system-ui, sans-serif;
+  color: #fff; background: rgba(0, 0, 0, .78);
+  border-radius: 10px;
+}
+.diagnose #diagnose { display: block; }

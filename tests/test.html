@@ -123,6 +123,12 @@
     pruefe('Modus nur_jumuah: Fr 14:31 → nach dem Zeitraum aus', L.jumuahAnsichtJetzt(w(FR, '14:31:00'), A3), false);
     pruefe('Modus gemischt: Do 12:01:45 → im Wechsel aus', L.jumuahAnsichtJetzt(w(DO, '12:01:45'), A3), false);
     pruefe('Ohne Modus-Angabe → wie bisher gemischt', L.jumuahAnsichtJetzt(w(FR, '10:01:45'), A2), false);
+    var A4 = { aktiv: true, intervallSekunden: 190, anzeigeSekunden: 20, zeitraeume: [
+      { wochentag: 4, von: '00:00', bis: '23:59', modus: 'gemischt' }, { wochentag: 5, von: '00:00', bis: '14:30', modus: 'gemischt' }] };
+    pruefe('190 s: Do 09:01:30 → an (Sekunde 32490 = 171 × 190)', L.jumuahAnsichtJetzt(w(DO, '09:01:30'), A4), true);
+    pruefe('190 s: nächste Einblendung ab Do 09:01:51 → 09:04:40', L.jumuahNaechsteEinblendung(w(DO, '09:01:51'), A4), 9 * 3600 + 4 * 60 + 40);
+    pruefe('190 s: Fr 14:31 → heute keine mehr', L.jumuahNaechsteEinblendung(w(FR, '14:31:00'), A4), null);
+    pruefe('Mi → keine Einblendung', L.jumuahNaechsteEinblendung(w('2026-10-28', '10:00:00'), A4), null);
     pruefe('Ansicht deaktiviert → aus', L.jumuahAnsichtJetzt(w(DO, '12:00:00'), { aktiv: false }), false);
     var JC = { uhrzeitSommer: '13:30', uhrzeitWinter: '12:30', heuteBisMinutenNach: 120 };
     function ziel(tag, uhr) { var z = L.jumuahZiel(w(tag, uhr), JC, TZ); return [z.tag, z.uhrzeit, z.wann]; }

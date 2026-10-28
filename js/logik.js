@@ -194,6 +194,22 @@
     return (w.sekundeDesTages % intervall) < dauer;
   };
 
+  // Sekunde des Tages, zu der die Jumu'ah-Ansicht heute das nächste Mal erscheint
+  // (null = heute nicht mehr). Nur für die Diagnose-Anzeige.
+  L.jumuahNaechsteEinblendung = function (w, ansichtCfg) {
+    if (!ansichtCfg || !ansichtCfg.aktiv) return null;
+    var intervall = Math.max(10, ansichtCfg.intervallSekunden || 180);
+    var beste = null;
+    (ansichtCfg.zeitraeume || []).forEach(function (z) {
+      if (z.wochentag !== w.wochentag) return;
+      var von = L.minuten(z.von || '00:00') * 60, bis = L.minuten(z.bis || '23:59') * 60 + 59;
+      var ab = Math.max(von, w.sekundeDesTages);
+      var t = (z.modus || ansichtCfg.modus) === 'nur_jumuah' ? ab : Math.ceil(ab / intervall) * intervall;
+      if (t <= bis && (beste === null || t < beste)) beste = t;
+    });
+    return beste;
+  };
+
   /* ---------- Datum ---------- */
 
   L.datumText = function (tag) {

@@ -6,10 +6,13 @@
      ?speed=60                  simulierte Zeit läuft 60-mal so schnell
      ?jumuah=immer | aus        Jumu'ah-Ansicht dauerhaft zeigen bzw. nie zeigen
      ?stream=aus                Livestream abschalten (nur Ersatz-Hintergrund)
-     ?modus=hell | dunkel       Design 5: hellen/dunklen Modus erzwingen  */
+     ?modus=hell | dunkel       Design 5: hellen/dunklen Modus erzwingen
+     ?diagnose=1                zeigt unten, was die Anzeige gerade „denkt“ (Wochentag,
+                                Jumu'ah-Zeitraum, nächster Wechsel, Programmversion)  */
 (function () {
   'use strict';
 
+  var VERSION = '2026-10-28b';   // bei jeder Änderung erhöhen (auch in index.html)
   var CFG = window.CONFIG, L = window.Logik, TZ = CFG.ZEITZONE || 'Europe/Berlin';
   var param = new URLSearchParams(location.search);
   var $ = function (id) { return document.getElementById(id); };
@@ -342,6 +345,7 @@
       schritt(zeitenAnzeigen, w);
       schritt(modusSetzen, w);
       schritt(jumuahUmschalten, w);
+      schritt(diagnose, w);
       if (simStartMs !== null) {
         setzeText('sim-hinweis', 'Simulation: ' + w.d + '.' + w.m + '.' + w.y + ' ' +
           L.zwei(w.h) + ':' + L.zwei(w.mi) + ':' + L.zwei(w.s) + (tempo !== 1 ? ' (×' + tempo + ')' : ''));
@@ -349,6 +353,21 @@
     } catch (e) {
       console.error(e);
     }
+  }
+
+  var WOCHENTAG_NAMEN = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+  function diagnose(w) {
+    if (param.get('diagnose') !== '1') return;
+    var ja = CFG.JUMUAH_ANSICHT || {}, z = L.jumuahZeitraum(w, ja);
+    var n = L.jumuahNaechsteEinblendung(w, ja), naechste = 'heute keine mehr';
+    if (zuletzt.jumuah) naechste = 'läuft gerade';
+    else if (n !== null) naechste = L.zwei(Math.floor(n / 3600)) + ':' + L.zwei(Math.floor(n / 60) % 60) + ':' + L.zwei(n % 60);
+    setzeText('diagnose',
+      'Version ' + VERSION + ' · ' + WOCHENTAG_NAMEN[w.wochentag] + ' ' + L.zwei(w.h) + ':' + L.zwei(w.mi) + ':' + L.zwei(w.s) +
+      ' (' + TZ + ') · Jumu\'ah-Ansicht ' + (ja.aktiv ? 'aktiv' : 'AUS') +
+      ' · Zeitraum jetzt: ' + (z ? z.von + '–' + z.bis + ' ' + (z.modus || ja.modus || 'gemischt') : 'nein') +
+      ' · alle ' + (ja.intervallSekunden || 180) + ' s für ' + (ja.anzeigeSekunden || 20) + ' s' +
+      ' · nächste Einblendung: ' + naechste);
   }
 
   function schritt(f, arg) {
@@ -378,8 +397,9 @@
     }, Math.max(1, bs.alleMinuten || 4) * 60000);
   }
 
-  // Simulation sichtbar kennzeichnen.
+  // Simulation bzw. Diagnose sichtbar kennzeichnen.
   if (simStartMs !== null) document.body.classList.add('simulation');
+  if (param.get('diagnose') === '1') document.body.classList.add('diagnose');
 
   /* ---------- Start ---------- */
 
