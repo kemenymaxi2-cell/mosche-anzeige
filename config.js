@@ -322,8 +322,8 @@ window.CONFIG = {
   //   6 Cemaziyelahir, 7 Recep, 8 Şaban, 9 Ramazan, 10 Şevval, 11 Zilkade, 12 Zilhicce
   // Zum Aktivieren die beiden // am Zeilenanfang entfernen.
   VERSE_FEST: [
-    // { wochentag: 5, text: "O ihr, die ihr glaubt, wenn am Freitag zum Gebet gerufen wird, dann eilt zum Gedenken Allahs und lasst das Geschäft ruhen.", sure: "Al-Dschumu'a", stelle: "62:9" },
-    // { hidschriMonat: 9, text: "O ihr, die ihr glaubt, vorgeschrieben ist euch das Fasten, so wie es denen vor euch vorgeschrieben war, auf dass ihr gottesfürchtig werdet.", sure: "Al-Baqara", stelle: "2:183" },
+    // { wochentag: 5, text: "Oh ihr, die ihr glaubt, wenn am Freitag zum Gebet gerufen wird, dann eilt zum Gedenken Allahs und lasst das Geschäft ruhen.", sure: "Al-Dschumu'a", stelle: "62:9" },
+    // { hidschriMonat: 9, text: "Oh ihr, die ihr glaubt, vorgeschrieben ist euch das Fasten, so wie es denen vor euch vorgeschrieben war, auf dass ihr gottesfürchtig werdet.", sure: "Al-Baqara", stelle: "2:183" },
     // { datum: "2026-11-06", text: "…", sure: "…", stelle: "…" },
   ],
 };
