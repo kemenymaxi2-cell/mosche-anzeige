@@ -243,6 +243,28 @@
     return verse[tagNr % verse.length];
   };
 
+  /* Fester Vers für bestimmte Tage (Vorrang vor der täglichen Reihenfolge).
+     Jeder Eintrag in `fest` nennt, wann er gilt – je genauer, desto höher der Vorrang:
+       datum: "2026-11-06"                    → genau dieses Datum
+       hidschriMonat: 1, hidschriTag: 10       → jedes Jahr an diesem islamischen Datum
+       hidschriMonat: 9                        → der ganze islamische Monat (z. B. Ramadan)
+       wochentag: 5                            → jede Woche an diesem Tag (5 = Freitag)
+     Passen mehrere gleich genaue Einträge, wechseln sie sich täglich ab. */
+  L.versFuerTag = function (tag, verse, fest, hidschriKorrektur) {
+    var h = null, beste = -1, kandidaten = [];
+    (fest || []).forEach(function (v) {
+      var rang = -1;
+      if (v.datum) rang = v.datum === tag ? 4 : -1;
+      else if (v.hidschriMonat) {
+        h = h || L.hidschriTeile(tag, hidschriKorrektur) || {};
+        if (v.hidschriMonat === h.monat && (!v.hidschriTag || v.hidschriTag === h.tag)) rang = v.hidschriTag ? 3 : 2;
+      } else if (v.wochentag !== undefined) rang = v.wochentag === L.wochentagVon(tag) ? 1 : -1;
+      if (rang > beste) { beste = rang; kandidaten = []; }
+      if (rang >= 0 && rang === beste) kandidaten.push(v);
+    });
+    return kandidaten.length ? L.versDesTages(tag, kandidaten) : L.versDesTages(tag, verse);
+  };
+
   if (typeof module === 'object' && module.exports) module.exports = L;
   else global.Logik = L;
 })(this);

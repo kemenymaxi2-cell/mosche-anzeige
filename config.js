@@ -311,4 +311,19 @@ window.CONFIG = {
     { text: "Und Er ist mit euch, wo immer ihr auch seid.", sure: "Al-Hadid", stelle: "57:4" },
     { text: "O ihr Menschen, Wir haben euch zu Völkern und Stämmen gemacht, damit ihr einander kennenlernt.", sure: "Al-Hudschurat", stelle: "49:13" },
   ],
+
+  // Feste Verse für bestimmte Tage – haben Vorrang vor der Liste oben.
+  // Je genauer die Angabe, desto höher der Vorrang:
+  //   datum: "2026-11-06"                 → genau an diesem Datum
+  //   hidschriMonat: 1, hidschriTag: 10    → jedes Jahr an diesem islamischen Datum (10 Muharrem)
+  //   hidschriMonat: 9                     → den ganzen islamischen Monat (9 = Ramazan)
+  //   wochentag: 5                         → jede Woche an diesem Tag (0 = Sonntag … 5 = Freitag)
+  // Islamische Monate: 1 Muharrem, 2 Safer, 3 Rebiülevvel, 4 Rebiülahir, 5 Cemaziyelevvel,
+  //   6 Cemaziyelahir, 7 Recep, 8 Şaban, 9 Ramazan, 10 Şevval, 11 Zilkade, 12 Zilhicce
+  // Zum Aktivieren die beiden // am Zeilenanfang entfernen.
+  VERSE_FEST: [
+    // { wochentag: 5, text: "O ihr, die ihr glaubt, wenn am Freitag zum Gebet gerufen wird, dann eilt zum Gedenken Allahs und lasst das Geschäft ruhen.", sure: "Al-Dschumu'a", stelle: "62:9" },
+    // { hidschriMonat: 9, text: "O ihr, die ihr glaubt, vorgeschrieben ist euch das Fasten, so wie es denen vor euch vorgeschrieben war, auf dass ihr gottesfürchtig werdet.", sure: "Al-Baqara", stelle: "2:183" },
+    // { datum: "2026-11-06", text: "…", sure: "…", stelle: "…" },
+  ],
 };

@@ -133,6 +133,18 @@
     pruefe('Wochentag 29.10.2026 = Donnerstag', w(DO, '12:00').wochentag, 4);
     pruefe('Hidschri-Datum enthält 1448', /1448 n\. H\.$/.test(L.hidschri('2026-10-25', 0, CONFIG.HIDSCHRI_MONATE)), true);
     pruefe('Vers wechselt täglich', L.versDesTages(DO, CONFIG.VERSE) !== L.versDesTages(FR, CONFIG.VERSE), true);
+    var FEST = [
+      { wochentag: 5, text: 'FREITAG', sure: 'x', stelle: '1' },
+      { hidschriMonat: 9, text: 'RAMAZAN', sure: 'x', stelle: '2' },
+      { hidschriMonat: 9, hidschriTag: 27, text: 'KADIR', sure: 'x', stelle: '3' },
+      { datum: '2026-11-06', text: 'DATUM', sure: 'x', stelle: '4' }];
+    function versText(tag) { return L.versFuerTag(tag, CONFIG.VERSE, FEST, 0).text; }
+    pruefe('Fester Vers: jeden Freitag (30.10.2026)', versText(FR), 'FREITAG');
+    pruefe('Fester Vers: Datum schlägt Wochentag (Fr 06.11.2026)', versText('2026-11-06'), 'DATUM');
+    pruefe('Fester Vers: ganzer Ramazan (Mi 17.02.2027 = 10 Ramazan 1448)', versText('2027-02-17'), 'RAMAZAN');
+    pruefe('Fester Vers: islamischer Monat schlägt Freitag (Fr 19.02.2027)', versText('2027-02-19'), 'RAMAZAN');
+    pruefe('Fester Vers: genauer islamischer Tag (06.03.2027 = 27 Ramazan)', versText('2027-03-06'), 'KADIR');
+    pruefe('Ohne passenden festen Vers → normale Reihenfolge', L.versFuerTag(DO, CONFIG.VERSE, FEST, 0), L.versDesTages(DO, CONFIG.VERSE));
     pruefe('Vers gleich am selben Tag', L.versDesTages(DO, CONFIG.VERSE) === L.versDesTages(DO, CONFIG.VERSE), true);
 
     var g = document.getElementById('gesamt');

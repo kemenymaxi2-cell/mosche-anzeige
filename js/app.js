@@ -211,7 +211,7 @@
     setzeText('hidschri', L.hidschriZweisprachig(w.tag, CFG.HIDSCHRI_KORREKTUR_TAGE,
       tuerkisch && CFG.HIDSCHRI_MONATE_TUERKISCH, CFG.HIDSCHRI_MONATE));
 
-    var vers = L.versDesTages(w.tag, CFG.VERSE);
+    var vers = L.versFuerTag(w.tag, CFG.VERSE, CFG.VERSE_FEST, CFG.HIDSCHRI_KORREKTUR_TAGE);
     setzeText('vers-text', vers ? '„' + vers.text + '“' : '');
     setzeText('vers-quelle', vers ? 'Sure ' + vers.sure + ' · ' + vers.stelle : '');
     versEinpassen();
