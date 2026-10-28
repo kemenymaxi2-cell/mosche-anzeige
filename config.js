@@ -151,6 +151,9 @@ window.CONFIG = {
 
     // Soll die Freitagsgebet-Uhrzeit klein auf dem Hauptbildschirm stehen?
     aufHauptbildschirm: true,
+
+    // Bezeichnung in dieser kleinen Anzeige oben rechts.
+    bezeichnung: "Jumu'ah / Freitagsgebet",
   },
 
   // Die bildschirmfüllende Jumu'ah-Sonderansicht.

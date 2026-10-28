@@ -223,8 +223,9 @@
     var fd = freitag.split('-');
     $('jumuah-mini').innerHTML = '';
     if (CFG.JUMUAH.aufHauptbildschirm) {
-      $('jumuah-mini').innerHTML = '<span class="jm-label">Freitagsgebet</span> ' +
+      $('jumuah-mini').innerHTML = '<span class="jm-label"></span> ' +
         '<span class="jm-tag"></span> <span class="jm-zeit"></span>';
+      $('jumuah-mini').querySelector('.jm-label').textContent = CFG.JUMUAH.bezeichnung || 'Freitagsgebet';
       $('jumuah-mini').querySelector('.jm-tag').textContent = wann ? wann : 'Fr., ' + Number(fd[2]) + '.' + Number(fd[1]) + '.';
       $('jumuah-mini').querySelector('.jm-zeit').textContent = jZeit;
     }
