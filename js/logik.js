@@ -149,20 +149,30 @@
   };
 
   // Liegt die Wanduhrzeit w in einem der konfigurierten Zeiträume?
-  L.imJumuahZeitraum = function (w, ansichtCfg) {
-    if (!ansichtCfg || !ansichtCfg.aktiv) return false;
-    var minute = w.h * 60 + w.mi;
-    return (ansichtCfg.zeitraeume || []).some(function (z) {
-      return z.wochentag === w.wochentag &&
-        minute >= L.minuten(z.von || '00:00') && minute <= L.minuten(z.bis || '23:59');
+  // Der passende Zeitraum aus der Konfiguration (oder null).
+  L.jumuahZeitraum = function (w, ansichtCfg) {
+    if (!ansichtCfg || !ansichtCfg.aktiv) return null;
+    var minute = w.h * 60 + w.mi, treffer = null;
+    (ansichtCfg.zeitraeume || []).some(function (z) {
+      if (z.wochentag === w.wochentag &&
+        minute >= L.minuten(z.von || '00:00') && minute <= L.minuten(z.bis || '23:59')) treffer = z;
+      return !!treffer;
     });
+    return treffer;
+  };
+
+  L.imJumuahZeitraum = function (w, ansichtCfg) {
+    return !!L.jumuahZeitraum(w, ansichtCfg);
   };
 
   // Soll die Jumu'ah-Sonderansicht genau jetzt sichtbar sein?
   // Zyklus richtet sich nach der Uhr: in jedem Intervall die ersten
   // anzeigeSekunden lang (z. B. 12:00:00–12:00:20, 12:03:00–12:03:20 …).
+  // Modus „nur_jumuah“: im Zeitraum dauerhaft die Jumu'ah-Ansicht, kein Wechsel.
   L.jumuahAnsichtJetzt = function (w, ansichtCfg) {
-    if (!L.imJumuahZeitraum(w, ansichtCfg)) return false;
+    var z = L.jumuahZeitraum(w, ansichtCfg);
+    if (!z) return false;
+    if ((z.modus || ansichtCfg.modus) === 'nur_jumuah') return true;
     var intervall = Math.max(10, ansichtCfg.intervallSekunden || 180);
     var dauer = Math.min(intervall - 5, ansichtCfg.anzeigeSekunden || 20);
     return (w.sekundeDesTages % intervall) < dauer;

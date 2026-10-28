@@ -116,6 +116,13 @@
     A2.zeitraeume.push({ wochentag: 5, von: '00:00', bis: '12:00' });
     pruefe('Mit Freitagvormittag: Fr 10:00:00 → an', L.jumuahAnsichtJetzt(w(FR, '10:00:00'), A2), true);
     pruefe('Mit Freitagvormittag: Fr 12:03:00 → aus', L.jumuahAnsichtJetzt(w(FR, '12:03:00'), A2), false);
+    var A3 = { aktiv: true, intervallSekunden: 180, anzeigeSekunden: 20, zeitraeume: [
+      { wochentag: 4, von: '00:00', bis: '23:59', modus: 'gemischt' },
+      { wochentag: 5, von: '00:00', bis: '14:30', modus: 'nur_jumuah' }] };
+    pruefe('Modus nur_jumuah: Fr 10:01:45 → dauerhaft an', L.jumuahAnsichtJetzt(w(FR, '10:01:45'), A3), true);
+    pruefe('Modus nur_jumuah: Fr 14:31 → nach dem Zeitraum aus', L.jumuahAnsichtJetzt(w(FR, '14:31:00'), A3), false);
+    pruefe('Modus gemischt: Do 12:01:45 → im Wechsel aus', L.jumuahAnsichtJetzt(w(DO, '12:01:45'), A3), false);
+    pruefe('Ohne Modus-Angabe → wie bisher gemischt', L.jumuahAnsichtJetzt(w(FR, '10:01:45'), A2), false);
     pruefe('Ansicht deaktiviert → aus', L.jumuahAnsichtJetzt(w(DO, '12:00:00'), { aktiv: false }), false);
     pruefe('Nächster Freitag ab Do 29.10.', L.naechsterFreitag(DO), FR);
     pruefe('Nächster Freitag ab Fr 30.10.', L.naechsterFreitag(FR), FR);

@@ -163,9 +163,11 @@ window.CONFIG = {
     // An welchen Tagen und zu welchen Uhrzeiten soll sie erscheinen?
     // wochentag: 0 = Sonntag, 1 = Montag, … 4 = Donnerstag, 5 = Freitag
     // von / bis: Uhrzeit im Format "HH:MM"
+    // modus:  "gemischt"   = wechselt sich mit dem Hauptbildschirm ab (Intervall unten)
+    //         "nur_jumuah" = in diesem Zeitraum NUR die Jumu'ah-Ansicht, dauerhaft
     zeitraeume: [
-      { wochentag: 4, von: "00:00", bis: "23:59" },   // Donnerstag ganztags
-       { wochentag: 5, von: "00:00", bis: "14:30" }, // Freitagvormittag (Zeile aktivieren: // am Anfang entfernen)
+      { wochentag: 4, von: "00:00", bis: "23:59", modus: "gemischt" },   // Donnerstag ganztags
+      { wochentag: 5, von: "00:00", bis: "14:30", modus: "gemischt" },   // Freitag bis 14:30
     ],
 
     // Alle wie viele Sekunden erscheint die Sonderansicht? (180 = 3 Minuten)
