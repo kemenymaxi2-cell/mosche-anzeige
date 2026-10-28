@@ -88,8 +88,16 @@
                      (zwischen Shuruq und Dhuhr: null, Shuruq ist kein Gebet)
        naechstes   – { schluessel, ms, tag } oder null, falls unbekannt
        fajrEndeMs  – Zeitpunkt von Shuruq, wenn gerade Fajr-Zeit ist */
-  L.zustand = function (jetztMs, tz, heuteTag, zeiten) {
+  // optionen.fajrVorShuruqMin: Wird das Fajr-Gebet gemeinsam erst kurz vor Sonnenaufgang
+  //   verrichtet (z. B. 30 Min. vor Shuruq), gilt diese Uhrzeit als „nächstes Gebet“.
+  //   Das aktuelle Gebetsfenster beginnt trotzdem schon zur Fajr-Zeit (İmsak).
+  L.zustand = function (jetztMs, tz, heuteTag, zeiten, optionen) {
     var heute = zeiten.heute, morgen = zeiten.morgen;
+    var vorShuruq = (optionen && optionen.fajrVorShuruqMin) || 0;
+    function fajrGebet(tag, z) {
+      var imsak = L.zeitpunkt(tag, z.fajr, tz);
+      return vorShuruq ? Math.max(imsak, L.zeitpunkt(tag, z.shuruq, tz) - vorShuruq * 60000) : imsak;
+    }
     var erg = { aktuell: null, naechstes: null, fajrEndeMs: null };
     if (!heute) return erg;
 
@@ -105,15 +113,18 @@
 
     if (erg.aktuell === 'fajr') erg.fajrEndeMs = ereignisse[1].ms;
 
-    // Nächstes Gebet (Shuruq wird übersprungen).
+    // Nächstes Gebet (Shuruq wird übersprungen, Fajr zur Gebetszeit der Gemeinde).
     for (var i = 0; i < ereignisse.length; i++) {
       var e = ereignisse[i];
+      if (e.schluessel === 'fajr') e = { schluessel: 'fajr', ms: fajrGebet(heuteTag, heute), tag: heuteTag };
       if (e.schluessel !== 'shuruq' && e.ms > jetztMs) { erg.naechstes = e; break; }
     }
     if (!erg.naechstes && morgen) {
       var morgenTag = L.tagPlus(heuteTag, 1);
-      erg.naechstes = { schluessel: 'fajr', ms: L.zeitpunkt(morgenTag, morgen.fajr, tz), tag: morgenTag };
+      erg.naechstes = { schluessel: 'fajr', ms: fajrGebet(morgenTag, morgen), tag: morgenTag };
     }
+    // Hinweis „Fajr-Zeit endet …“ erst, wenn das Fajr-Gebet nicht mehr bevorsteht.
+    if (erg.naechstes && erg.naechstes.schluessel === 'fajr') erg.fajrEndeMs = null;
     return erg;
   };
 

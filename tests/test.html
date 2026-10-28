@@ -76,6 +76,17 @@
     pruefe('Countdown 10:54 → Dhuhr in 1 Std. 12 Min.',
       L.dauerText(zustand('10:54').naechstes.ms - ms(DO, '10:54')), '1 Std. 12 Min.');
 
+    // --- Fajr in der Moschee 30 Min. vor Shuruq (nur „Nächstes Gebet“) ---
+    function zustand30(uhr) {
+      return L.zustand(ms(DO, uhr), TZ, DO, { heute: zDo, morgen: zFr }, { fajrVorShuruqMin: 30 });
+    }
+    pruefe('30 vor Shuruq: 03:00 → nächstes Fajr um 06:22 (Shuruq 06:52 − 30)', zustand30('03:00').naechstes.ms, ms(DO, '06:22'));
+    pruefe('30 vor Shuruq: 05:30 → Fajr-Fenster aktuell, nächstes weiterhin Fajr 06:22', kurz(zustand30('05:30')), ['fajr', 'fajr', DO]);
+    pruefe('30 vor Shuruq: 05:30 → noch kein „Fajr-Zeit endet“-Hinweis', zustand30('05:30').fajrEndeMs, null);
+    pruefe('30 vor Shuruq: 06:30 → nächstes Dhuhr, Hinweis bis Shuruq', [kurz(zustand30('06:30'))[1], zustand30('06:30').fajrEndeMs], ['dhuhr', ms(DO, '06:52')]);
+    pruefe('30 vor Shuruq: 23:30 → Fajr morgen um 06:23', zustand30('23:30').naechstes.ms, ms(FR, '06:23'));
+    pruefe('30 vor Shuruq: Gebetsleiste/aktuelles Gebet unverändert (12:06 → Dhuhr)', kurz(zustand30('12:06'))[0], 'dhuhr');
+
     // --- Countdown-Text ---
     pruefe('dauerText 45 Min.', L.dauerText(45 * 60000), '45 Min.');
     pruefe('dauerText 2 Std.', L.dauerText(120 * 60000), '2 Std.');

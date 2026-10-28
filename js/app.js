@@ -221,7 +221,8 @@
       if (z.textContent !== t) z.textContent = t;
     });
 
-    var st = L.zustand(jetzt(), TZ, w.tag, { heute: heute, morgen: morgen });
+    var st = L.zustand(jetzt(), TZ, w.tag, { heute: heute, morgen: morgen },
+      { fajrVorShuruqMin: CFG.FAJR_MINUTEN_VOR_SHURUQ });
     L.SCHLUESSEL.forEach(function (k) {
       kacheln[k].classList.toggle('aktuell', st.aktuell === k);
       kacheln[k].classList.toggle('naechstes', !!st.naechstes && st.naechstes.schluessel === k &&

@@ -102,6 +102,13 @@ window.CONFIG = {
   },
 
 
+  // Fajr: Wann wird das Morgengebet in der Moschee verrichtet?
+  // Rechts oben bei „Nächstes Gebet“ wird für Fajr diese Uhrzeit angezeigt:
+  // so viele Minuten vor Sonnenaufgang (Shuruq/Güneş). 0 = normale Fajr-Zeit (İmsak).
+  // Die Gebetsleiste unten zeigt weiterhin die normale Fajr-Zeit.
+  FAJR_MINUTEN_VOR_SHURUQ: 30,
+
+
   /* -------------------------------------------------------------------
      4) GEBETSZEITEN-QUELLE
      ------------------------------------------------------------------- */
