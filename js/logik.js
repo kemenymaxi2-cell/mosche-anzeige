@@ -175,6 +175,13 @@
     return WOCHENTAGE[L.wochentagVon(tag)] + ', ' + d[2] + '. ' + MONATE[d[1] - 1] + ' ' + d[0];
   };
 
+  // „Çarşamba / Mittwoch, 28.10.2026“ (ohne türkische Namen: „Mittwoch, 28.10.2026“)
+  L.datumZahlen = function (tag, wochentageTuerkisch) {
+    var d = tag.split('-'), wt = L.wochentagVon(tag);
+    var tr = wochentageTuerkisch && wochentageTuerkisch[wt];
+    return (tr ? tr + ' / ' : '') + WOCHENTAGE[wt] + ', ' + d[2] + '.' + d[1] + '.' + d[0];
+  };
+
   var hidschriFormat = null;
   // Hidschri-Datum als Zahlen: { tag, monat (1–12), jahr } oder null.
   L.hidschriTeile = function (tag, korrekturTage) {
@@ -200,6 +207,15 @@
   L.hidschri = function (tag, korrekturTage, monatsnamen) {
     var h = L.hidschriTeile(tag, korrekturTage);
     return h ? h.tag + '. ' + (monatsnamen[h.monat - 1] || h.monat) + ' ' + h.jahr + ' n. H.' : '';
+  };
+
+  // „17. Cemaziyelevvel / Dschumada l-Ula 1448“ (ohne türkische Namen: „17. Dschumada l-Ula 1448“)
+  L.hidschriZweisprachig = function (tag, korrekturTage, monateTuerkisch, monateUmschrift) {
+    var h = L.hidschriTeile(tag, korrekturTage);
+    if (!h) return '';
+    var tr = monateTuerkisch && monateTuerkisch[h.monat - 1];
+    var um = (monateUmschrift && monateUmschrift[h.monat - 1]) || h.monat;
+    return h.tag + '. ' + (tr ? tr + ' / ' : '') + um + ' ' + h.jahr;
   };
 
   // Türkische Schreibweise wie bei Diyanet: „14 Cemaziyelevvel 1448“

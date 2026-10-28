@@ -99,18 +99,43 @@
     kacheln[k] = el;
   });
 
-  function qrZeichnen(ziel, url) {
+  // Piktogramme für die Mitte der QR-Codes (Koordinaten 0–24)
+  var QR_LOGOS = {
+    instagram:
+      '<defs><radialGradient id="ig-verlauf" cx=".25" cy="1.05" r="1.25">' +
+      '<stop offset="0" stop-color="#FED373"/><stop offset=".25" stop-color="#F15245"/>' +
+      '<stop offset=".55" stop-color="#D92E7F"/><stop offset=".8" stop-color="#9B36B7"/>' +
+      '<stop offset="1" stop-color="#515ECF"/></radialGradient></defs>' +
+      '<rect width="24" height="24" rx="6.5" fill="url(#ig-verlauf)"/>' +
+      '<rect x="5" y="5" width="14" height="14" rx="4.2" fill="none" stroke="#fff" stroke-width="1.9"/>' +
+      '<circle cx="12" cy="12" r="3.3" fill="none" stroke="#fff" stroke-width="1.9"/>' +
+      '<circle cx="16.1" cy="7.9" r="1.1" fill="#fff"/>',
+    whatsapp:
+      '<rect width="24" height="24" rx="6.5" fill="#25D366"/>' +
+      '<path d="M12 4.6a7.4 7.4 0 0 0-6.4 11.1l-1 3.7 3.8-1A7.4 7.4 0 1 0 12 4.6z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<path d="M9.4 8.6c.2-.4.4-.4.6-.4h.4c.2 0 .3 0 .5.4l.6 1.4c.1.2 0 .4-.1.5l-.4.5c-.1.1-.2.3 0 .5.3.5.8 1.1 1.3 1.5.6.5 1.1.7 1.4.8.2.1.3 0 .5-.1l.5-.7c.1-.2.3-.2.5-.1l1.3.6c.2.1.4.2.4.3 0 .2 0 .8-.3 1.1-.3.4-1 .8-1.6.8-.5 0-1.3-.1-2.6-.8-1.6-.8-2.6-2.4-2.8-2.6-.2-.2-.8-1.1-.8-2 0-.9.4-1.4.6-1.6z" fill="#fff"/>',
+  };
+
+  function qrZeichnen(ziel, url, logo) {
     try {
-      var qr = qrcode(0, 'M');
+      // Fehlerkorrektur „H“: bis zu 30 % des Codes dürfen verdeckt sein – Platz für das Logo
+      var qr = qrcode(0, logo ? 'H' : 'M');
       qr.addData(url);
       qr.make();
-      var n = qr.getModuleCount(), rand = 2, pfad = '';
+      var n = qr.getModuleCount(), rand = 4, pfad = '';   // 4 Module Ruhezone: Pflicht für zuverlässiges Scannen
       for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
         if (qr.isDark(y, x)) pfad += 'M' + (x + rand) + ',' + (y + rand) + 'h1v1h-1z';
       }
-      var g = n + 2 * rand;
+      var g = n + 2 * rand, mitte = '';
+      if (logo && QR_LOGOS[logo]) {
+        // Logo ca. 20 % der Breite (≈ 4 % der Fläche), mit weißem Rand
+        var gr = Math.round(n * 0.20), feld = gr + 2, pos = (g - feld) / 2;
+        mitte = '<rect x="' + pos + '" y="' + pos + '" width="' + feld + '" height="' + feld + '" rx="' + feld * 0.3 + '" class="qr-hg"/>' +
+          '<svg x="' + (pos + 1) + '" y="' + (pos + 1) + '" width="' + gr + '" height="' + gr + '" viewBox="0 0 24 24" shape-rendering="geometricPrecision">' +
+          QR_LOGOS[logo] + '</svg>';
+      }
       ziel.innerHTML = '<svg viewBox="0 0 ' + g + ' ' + g + '" shape-rendering="crispEdges">' +
-        '<rect width="' + g + '" height="' + g + '" class="qr-hg"/><path d="' + pfad + '" class="qr-vg"/></svg>';
+        '<rect width="' + g + '" height="' + g + '" class="qr-hg"/><path d="' + pfad + '" class="qr-vg"/>' + mitte + '</svg>';
     } catch (e) { ziel.textContent = ''; }
   }
 
@@ -137,14 +162,14 @@
 
   function instagram(id, handle, titel) {
     var name = String(handle || '').trim().replace(/^@/, '');
-    qrZeichnen($(id), 'https://instagram.com/' + encodeURIComponent(name));
+    qrZeichnen($(id), 'https://instagram.com/' + encodeURIComponent(name), 'instagram');
     qrBeschriften(id, 'instagram', titel, '@' + name);
   }
   instagram('qr-moschee', CFG.INSTAGRAM_MOSCHEE, CFG.INSTAGRAM_MOSCHEE_TITEL);
   instagram('qr-jugend', CFG.INSTAGRAM_JUGEND, CFG.INSTAGRAM_JUGEND_TITEL);
 
   if (CFG.WHATSAPP_KANAL) {
-    qrZeichnen($('qr-whatsapp'), CFG.WHATSAPP_KANAL);
+    qrZeichnen($('qr-whatsapp'), CFG.WHATSAPP_KANAL, 'whatsapp');
     qrBeschriften('qr-whatsapp', 'whatsapp', CFG.WHATSAPP_KANAL_TITEL || 'WhatsApp', CFG.WHATSAPP_KANAL_TEXT || '');
   } else {
     $('qr-whatsapp').parentNode.style.display = 'none';
@@ -180,15 +205,11 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(versEinpassen);
 
   function tagesInhalte(w) {
-    setzeText('datum', L.datumText(w.tag));
-    // Hidschri-Datum: Umschrift, daneben (falls gewünscht) auf Türkisch
-    var hd = $('hidschri');
-    hd.innerHTML = '<span class="h-umschrift"></span>';
-    hd.firstChild.textContent = L.hidschri(w.tag, CFG.HIDSCHRI_KORREKTUR_TAGE, CFG.HIDSCHRI_MONATE);
-    if (CFG.HIDSCHRI_TUERKISCH && CFG.HIDSCHRI_MONATE_TUERKISCH) {
-      hd.insertAdjacentHTML('beforeend', '<span class="h-trenner"> · </span><span class="h-tuerkisch" lang="tr"></span>');
-      hd.lastChild.textContent = L.hidschriTuerkisch(w.tag, CFG.HIDSCHRI_KORREKTUR_TAGE, CFG.HIDSCHRI_MONATE_TUERKISCH);
-    }
+    var tuerkisch = CFG.HIDSCHRI_TUERKISCH !== false;
+    setzeText('datum', L.datumZahlen(w.tag, tuerkisch && CFG.WOCHENTAGE_TUERKISCH));
+    // Hidschri-Datum: Monat auf Türkisch / in Umschrift
+    setzeText('hidschri', L.hidschriZweisprachig(w.tag, CFG.HIDSCHRI_KORREKTUR_TAGE,
+      tuerkisch && CFG.HIDSCHRI_MONATE_TUERKISCH, CFG.HIDSCHRI_MONATE));
 
     var vers = L.versDesTages(w.tag, CFG.VERSE);
     setzeText('vers-text', vers ? '„' + vers.text + '“' : '');

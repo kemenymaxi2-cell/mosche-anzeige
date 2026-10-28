@@ -247,8 +247,12 @@ window.CONFIG = {
     "Ramadan", "Schawwal", "Dhu l-Qa'da", "Dhu l-Hiddscha",
   ],
 
-  // Hidschri-Datum zusätzlich auf Türkisch anzeigen (true = ja, false = nein).
+  // Türkische Namen beim Datum anzeigen (true = ja, false = nein):
+  //   „Çarşamba / Mittwoch, 28.10.2026“ und „17. Cemaziyelevvel / Dschumada l-Ula 1448“
   HIDSCHRI_TUERKISCH: true,
+  WOCHENTAGE_TUERKISCH: [
+    "Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi",
+  ],
   HIDSCHRI_MONATE_TUERKISCH: [
     "Muharrem", "Safer", "Rebiülevvel", "Rebiülahir",
     "Cemaziyelevvel", "Cemaziyelahir", "Recep", "Şaban",
