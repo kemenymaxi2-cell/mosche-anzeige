@@ -52,6 +52,15 @@ window.CONFIG = {
   // Am besten eine SVG-Datei, bei der die Buchstaben ausgestanzt (transparent) sind.
   LOGO: "assets/ditib-logo.svg",
 
+  // Optional: eigenes mehrfarbiges Logo für Tag- und Nachtmodus (nur Design 5).
+  // Sind beide eingetragen, werden sie statt LOGO angezeigt und wechseln
+  // automatisch mit hell/dunkel. Leer lassen ("") = normales Logo von oben.
+  // Beispiel 40-Jahre-Logo:
+  //   LOGO_TAG:   "assets/ditib-40-hell.svg",
+  //   LOGO_NACHT: "assets/ditib-40-dunkel.svg",
+  LOGO_TAG: "",
+  LOGO_NACHT: "",
+
   // Feineinstellungen nur für Design 5 „Glas“
   DESIGN_5: {
     // "auto"   = tagsüber hell, abends/nachts dunkel (wie beim iPhone)

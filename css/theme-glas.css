@@ -279,3 +279,16 @@
 .theme-5 .insta-karte .label { display: none; }
 .theme-5 .qr-block { align-self: start; margin-top: 4px; }
 .theme-5 .qr-block figcaption { min-height: 70px; justify-content: flex-start; }
+
+/* Mehrfarbiges Logo (LOGO_TAG / LOGO_NACHT in config.js), z. B. 40 Jahre DITIB */
+.logo-glas.mehrfarbig img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  transition: opacity 3s ease;
+}
+.logo-glas.mehrfarbig .logo-tag { opacity: 0; }
+.modus-hell .logo-glas.mehrfarbig .logo-tag { opacity: 1; }
+.modus-hell .logo-glas.mehrfarbig .logo-nacht { opacity: 0; }
+.theme-5 .kopf .logo-glas.mehrfarbig { width: 122px; height: 76px; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .18)); }
+.theme-5 .j-logo.mehrfarbig { width: 240px; height: 150px; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .25)); }

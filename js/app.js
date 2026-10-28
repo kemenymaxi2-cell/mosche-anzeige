@@ -34,7 +34,15 @@
   var root = document.documentElement.style;
   root.setProperty('--abdunklung', String(CFG.STREAM.abdunklung));
   root.setProperty('--ueberblendung', (CFG.JUMUAH_ANSICHT.ueberblendungMs || 1500) + 'ms');
-  if (CFG.LOGO) {
+  if (CFG.LOGO_TAG || CFG.LOGO_NACHT) {
+    // Mehrfarbiges Logo: je ein Bild für Tag und Nacht, CSS blendet passend zum Modus um
+    Array.prototype.forEach.call(document.querySelectorAll('.logo-glas'), function (el) {
+      el.classList.add('mehrfarbig');
+      el.innerHTML = '<img class="logo-tag" alt=""><img class="logo-nacht" alt="">';
+      el.firstChild.src = CFG.LOGO_TAG || CFG.LOGO_NACHT;
+      el.lastChild.src = CFG.LOGO_NACHT || CFG.LOGO_TAG;
+    });
+  } else if (CFG.LOGO) {
     Array.prototype.forEach.call(document.querySelectorAll('.logo'), function (el) {
       if (location.protocol === 'file:') {
         // Per Doppelklick geöffnet: Masken aus Dateien sind gesperrt → Logo als Bild zeigen
