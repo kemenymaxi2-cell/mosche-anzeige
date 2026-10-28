@@ -109,6 +109,13 @@ window.CONFIG = {
   FAJR_MINUTEN_VOR_SHURUQ: 30,
 
 
+  // Beschriftungen rechts oben im Feld „Nächstes Gebet“ (zuerst Türkisch, dann Deutsch).
+  TEXTE: {
+    naechstesGebet: "Sonraki Namaz / Nächstes Gebet",   // Überschrift
+    morgen: "yarın / morgen",                           // steht in Klammern, wenn das Gebet erst morgen ist
+  },
+
+
   /* -------------------------------------------------------------------
      4) GEBETSZEITEN-QUELLE
      ------------------------------------------------------------------- */

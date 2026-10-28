@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2026-10-28b';   // bei jeder Änderung erhöhen (auch in index.html)
+  var VERSION = '2026-10-28c';   // bei jeder Änderung erhöhen (auch in index.html)
   var CFG = window.CONFIG, L = window.Logik, TZ = CFG.ZEITZONE || 'Europe/Berlin';
   var param = new URLSearchParams(location.search);
   var $ = function (id) { return document.getElementById(id); };
@@ -90,6 +90,11 @@
   /* ---------- Statische Inhalte ---------- */
 
   $('moschee-name').textContent = CFG.MOSCHEE_NAME || '';
+
+  var TEXTE = CFG.TEXTE || {};
+  TEXTE.naechstesGebet = TEXTE.naechstesGebet || 'Nächstes Gebet';
+  TEXTE.morgen = TEXTE.morgen || 'morgen';
+  $('n-label').textContent = TEXTE.naechstesGebet;
 
   var kacheln = {};
   L.SCHLUESSEL.forEach(function (k) {
@@ -270,7 +275,7 @@
     if (!st.naechstes) {
       setzeText('n-name', CFG.GEBETE.fajr.name);
       setzeText('n-deutsch', CFG.GEBETE.fajr.deutsch);
-      setzeText('n-countdown', 'morgen');
+      setzeText('n-countdown', TEXTE.morgen);
       setzeText('n-hinweis', '');
       return;
     }
@@ -278,9 +283,9 @@
     var uhr = L.wanduhr(st.naechstes.ms, TZ);
     setzeText('n-name', g.name);
     setzeText('n-deutsch', g.deutsch);
-    setzeText('n-countdown', 'in ' + L.dauerText(st.naechstes.ms - jetzt()));
+    setzeText('n-countdown', L.dauerText(st.naechstes.ms - jetzt()));
 
-    var hinweis = 'um ' + L.zwei(uhr.h) + ':' + L.zwei(uhr.mi) + (st.naechstes.tag !== w.tag ? ' (morgen)' : '');
+    var hinweis = 'um ' + L.zwei(uhr.h) + ':' + L.zwei(uhr.mi) + (st.naechstes.tag !== w.tag ? ' (' + TEXTE.morgen + ')' : '');
     if (st.fajrEndeMs) {
       var s = L.wanduhr(st.fajrEndeMs, TZ);
       hinweis = CFG.GEBETE.fajr.name + '-Zeit endet in ' + L.dauerText(st.fajrEndeMs - jetzt()) +
