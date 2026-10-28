@@ -164,7 +164,7 @@ window.CONFIG = {
     heuteBisMinutenNach: 120,
 
     // Bezeichnung in dieser kleinen Anzeige oben rechts.
-    bezeichnung: "Jumu'ah / Freitagsgebet",
+    bezeichnung: "Cuma Namazı / Freitagsgebet",
   },
 
   // Die bildschirmfüllende Jumu'ah-Sonderansicht.

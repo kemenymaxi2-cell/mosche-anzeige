@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2026-10-28c';   // bei jeder Änderung erhöhen (auch in index.html)
+  var VERSION = '2026-10-28d';   // bei jeder Änderung erhöhen (auch in index.html)
   var CFG = window.CONFIG, L = window.Logik, TZ = CFG.ZEITZONE || 'Europe/Berlin';
   var param = new URLSearchParams(location.search);
   var $ = function (id) { return document.getElementById(id); };
