@@ -1,11 +1,12 @@
 /* Steuerung der Anzeige: Uhr, Gebetszeiten, Jumu'ah-Wechsel, Hintergrund.
 
    Test-Parameter in der Adresszeile (mit & kombinierbar):
-     ?theme=1 … 4               Design wählen
+     ?theme=1 … 5               Design wählen
      ?now=2026-10-29T12:00      Datum/Uhrzeit simulieren (Ortszeit Marktoberdorf)
      ?speed=60                  simulierte Zeit läuft 60-mal so schnell
      ?jumuah=immer | aus        Jumu'ah-Ansicht dauerhaft zeigen bzw. nie zeigen
-     ?stream=aus                Livestream abschalten (nur Ersatz-Hintergrund)  */
+     ?stream=aus                Livestream abschalten (nur Ersatz-Hintergrund)
+     ?modus=hell | dunkel       Design 5: hellen/dunklen Modus erzwingen  */
 (function () {
   'use strict';
 
@@ -215,11 +216,16 @@
     setzeText('vers-text', vers ? '„' + vers.text + '“' : '');
     setzeText('vers-quelle', vers ? 'Sure ' + vers.sure + ' · ' + vers.stelle : '');
     versEinpassen();
+  }
 
-    // Freitagsgebet (dezent) und Sonderansicht
-    var freitag = L.naechsterFreitag(w.tag);
-    var jZeit = L.jumuahUhrzeit(CFG.JUMUAH, freitag, TZ);
-    var wann = freitag === w.tag ? 'Heute' : freitag === L.tagPlus(w.tag, 1) ? 'Morgen' : '';
+  // Freitagsgebet (dezent oben rechts) und Sonderansicht – wird jede Minute geprüft,
+  // damit am Freitag nach dem Gebet der nächste Freitag erscheint.
+  function jumuahInhalte(w) {
+    var ziel = L.jumuahZiel(w, CFG.JUMUAH, TZ);
+    var schluessel = ziel.tag + ziel.uhrzeit + ziel.wann;
+    if (schluessel === zuletzt.jumuahZiel) return;
+    zuletzt.jumuahZiel = schluessel;
+    var freitag = ziel.tag, jZeit = ziel.uhrzeit, wann = ziel.wann;
     var fd = freitag.split('-');
     $('jumuah-mini').innerHTML = '';
     if (CFG.JUMUAH.aufHauptbildschirm) {
@@ -327,12 +333,15 @@
 
       if (w.tag !== zuletzt.tag) {
         zuletzt.tag = w.tag;
-        tagesInhalte(w);
-        datenNachladen(w.tag);
+        schritt(tagesInhalte, w);
+        schritt(datenNachladen, w.tag);
       }
-      zeitenAnzeigen(w);
-      modusSetzen(w);
-      jumuahUmschalten(w);
+      // Jeder Teil für sich: Ein Fehler in einem Teil darf die anderen
+      // (z. B. den Wechsel zur Jumu'ah-Ansicht) nicht aufhalten.
+      schritt(jumuahInhalte, w);
+      schritt(zeitenAnzeigen, w);
+      schritt(modusSetzen, w);
+      schritt(jumuahUmschalten, w);
       if (simStartMs !== null) {
         setzeText('sim-hinweis', 'Simulation: ' + w.d + '.' + w.m + '.' + w.y + ' ' +
           L.zwei(w.h) + ':' + L.zwei(w.mi) + ':' + L.zwei(w.s) + (tempo !== 1 ? ' (×' + tempo + ')' : ''));
@@ -340,6 +349,10 @@
     } catch (e) {
       console.error(e);
     }
+  }
+
+  function schritt(f, arg) {
+    try { f(arg); } catch (e) { console.error(e); }
   }
 
   /* ---------- Wartung ---------- */

@@ -87,6 +87,12 @@ Weitere Einstellungen:
 - `ONLINE_ERSATZ.tune`: Minuten-Korrektur je Gebet für die Online-Ersatzzeiten.
 - `HIDSCHRI_KORREKTUR_TAGE`: Hidschri-Datum um ±1 Tag anpassen. `HIDSCHRI_TUERKISCH` schaltet die türkische Schreibweise (z. B. „14 Cemaziyelevvel 1448“) neben der Umschrift ein oder aus.
 - `BURNIN_SCHUTZ`: unmerkliches Verschieben des Layouts.
+- `FAJR_MINUTEN_VOR_SHURUQ`: Fajr-Zeit rechts oben bei „Nächstes Gebet“, also so viele Minuten vor Sonnenaufgang (`0` = normale Fajr-Zeit).
+- `JUMUAH.bezeichnung`: Text der kleinen Freitagsgebet-Anzeige oben rechts.
+- `JUMUAH.heuteBisMinutenNach`: So viele Minuten nach Beginn des Freitagsgebets steht noch „Heute“; danach erscheint schon der nächste Freitag.
+- `JUMUAH_ANSICHT.zeitraeume[].modus`: Mit `"gemischt"` wechselt sich die Jumu'ah-Ansicht mit dem Hauptbildschirm ab, mit `"nur_jumuah"` bleibt sie im Zeitraum dauerhaft stehen.
+- `VERSE_FEST`: Feste Verse für bestimmte Tage. Möglich sind ein Datum, ein islamisches Datum, ein islamischer Monat (z. B. Ramazan) oder ein Wochentag.
+- `LOGO_TAG` / `LOGO_NACHT`: Ein eigenes mehrfarbiges Logo für den Tag- und den Nachtmodus (Design 5), z. B. das 40-Jahre-Logo.
 
 Sieht die Seite nach einer Änderung leer aus, fehlt meist ein Komma oder ein Anführungszeichen.
 Machen Sie die letzte Änderung dann rückgängig.

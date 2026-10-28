@@ -87,7 +87,7 @@
         } catch (e) { /* egal */ }
       })
       .catch(function (e) { console.warn('Diyanet-Gebetszeiten nicht abrufbar:', e.message); })
-      .finally(function () { diyanetLaeuft = null; });
+      .then(function (r) { diyanetLaeuft = null; return r; }, function (e) { diyanetLaeuft = null; throw e; });   // „finally“ für ältere TV-Browser
     return diyanetLaeuft;
   }
 
@@ -95,7 +95,7 @@
     var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, ms);
     return fetch(url, { cache: 'no-store', signal: ctrl ? ctrl.signal : undefined })
-      .finally(function () { clearTimeout(timer); });
+      .then(function (r) { clearTimeout(timer); return r; }, function (e) { clearTimeout(timer); throw e; });   // „finally“ für ältere TV-Browser
   }
 
   function uebernehmen(json) {
@@ -149,7 +149,7 @@
         cacheSpeichern();
       })
       .catch(function (e) { console.warn('Online-Gebetszeiten nicht abrufbar:', e.message); })
-      .finally(function () { delete laufend[id]; });
+      .then(function (r) { delete laufend[id]; return r; }, function (e) { delete laufend[id]; throw e; });   // „finally“ für ältere TV-Browser
     return laufend[id];
   }
 

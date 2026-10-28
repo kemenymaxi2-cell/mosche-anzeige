@@ -124,6 +124,14 @@
     pruefe('Modus gemischt: Do 12:01:45 → im Wechsel aus', L.jumuahAnsichtJetzt(w(DO, '12:01:45'), A3), false);
     pruefe('Ohne Modus-Angabe → wie bisher gemischt', L.jumuahAnsichtJetzt(w(FR, '10:01:45'), A2), false);
     pruefe('Ansicht deaktiviert → aus', L.jumuahAnsichtJetzt(w(DO, '12:00:00'), { aktiv: false }), false);
+    var JC = { uhrzeitSommer: '13:30', uhrzeitWinter: '12:30', heuteBisMinutenNach: 120 };
+    function ziel(tag, uhr) { var z = L.jumuahZiel(w(tag, uhr), JC, TZ); return [z.tag, z.uhrzeit, z.wann]; }
+    pruefe('Jumu\'ah-Ziel Do 20:00 → morgen', ziel(DO, '20:00'), [FR, '12:30', 'Morgen']);
+    pruefe('Jumu\'ah-Ziel Fr 09:00 → heute', ziel(FR, '09:00'), [FR, '12:30', 'Heute']);
+    pruefe('Jumu\'ah-Ziel Fr 14:29 → noch heute', ziel(FR, '14:29'), [FR, '12:30', 'Heute']);
+    pruefe('Jumu\'ah-Ziel Fr 14:30 → nächste Woche', ziel(FR, '14:30'), ['2026-11-06', '12:30', '']);
+    pruefe('Jumu\'ah-Ziel Fr 20:00 → nächste Woche', ziel(FR, '20:00'), ['2026-11-06', '12:30', '']);
+    pruefe('Jumu\'ah-Ziel Sa → nächster Freitag', ziel('2026-10-31', '10:00'), ['2026-11-06', '12:30', '']);
     pruefe('Nächster Freitag ab Do 29.10.', L.naechsterFreitag(DO), FR);
     pruefe('Nächster Freitag ab Fr 30.10.', L.naechsterFreitag(FR), FR);
     pruefe('Nächster Freitag ab Sa 31.10.', L.naechsterFreitag('2026-10-31'), '2026-11-06');

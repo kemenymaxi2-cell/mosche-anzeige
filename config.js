@@ -152,6 +152,10 @@ window.CONFIG = {
     // Soll die Freitagsgebet-Uhrzeit klein auf dem Hauptbildschirm stehen?
     aufHauptbildschirm: true,
 
+    // Am Freitag bleibt „Heute“ so viele Minuten nach Beginn des Freitagsgebets
+    // stehen; danach wird schon das Freitagsgebet der nächsten Woche angezeigt.
+    heuteBisMinutenNach: 120,
+
     // Bezeichnung in dieser kleinen Anzeige oben rechts.
     bezeichnung: "Jumu'ah / Freitagsgebet",
   },

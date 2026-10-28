@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 jobs:
   aktualisieren:
@@ -32,3 +33,7 @@ jobs:
           git add gebetszeiten.json gebetszeiten.js
           git commit -m "Gebetszeiten von Diyanet aktualisiert"
           git push
+          # Sicherstellen, dass GitHub Pages die neue Datei auch veröffentlicht
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
+        env:
+          GH_TOKEN: ${{ github.token }}

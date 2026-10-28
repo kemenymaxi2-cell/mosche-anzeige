@@ -148,6 +148,22 @@
     return L.istSommerzeit(freitag, tz) ? jumuahCfg.uhrzeitSommer : jumuahCfg.uhrzeitWinter;
   };
 
+  // Welches Freitagsgebet wird angezeigt? Am Freitag selbst bleibt es „Heute“, bis
+  // jumuahCfg.heuteBisMinutenNach (Standard 120) Minuten nach Beginn vergangen sind –
+  // danach der Freitag der nächsten Woche.
+  // Ergebnis: { tag: "YYYY-MM-DD", uhrzeit: "HH:MM", wann: "Heute" | "Morgen" | "" }
+  L.jumuahZiel = function (w, jumuahCfg, tz) {
+    var freitag = L.naechsterFreitag(w.tag);
+    var uhrzeit = L.jumuahUhrzeit(jumuahCfg, freitag, tz);
+    var nach = jumuahCfg.heuteBisMinutenNach != null ? jumuahCfg.heuteBisMinutenNach : 120;
+    if (freitag === w.tag && w.h * 60 + w.mi >= L.minuten(uhrzeit) + nach) {
+      freitag = L.tagPlus(w.tag, 7);
+      uhrzeit = L.jumuahUhrzeit(jumuahCfg, freitag, tz);
+    }
+    var wann = freitag === w.tag ? 'Heute' : freitag === L.tagPlus(w.tag, 1) ? 'Morgen' : '';
+    return { tag: freitag, uhrzeit: uhrzeit, wann: wann };
+  };
+
   // Liegt die Wanduhrzeit w in einem der konfigurierten Zeiträume?
   // Der passende Zeitraum aus der Konfiguration (oder null).
   L.jumuahZeitraum = function (w, ansichtCfg) {
