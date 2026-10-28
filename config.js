@@ -131,7 +131,7 @@ window.CONFIG = {
     // Uhrzeit des Freitagsgebets, getrennt nach Sommer- und Winterzeit.
     // (Sommerzeit = letzter Sonntag im März bis letzter Sonntag im Oktober)
     uhrzeitSommer: "13:30",
-    uhrzeitWinter: "12:45",
+    uhrzeitWinter: "12:30",
 
     // Soll die Freitagsgebet-Uhrzeit klein auf dem Hauptbildschirm stehen?
     aufHauptbildschirm: true,
