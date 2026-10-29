@@ -189,12 +189,12 @@ window.CONFIG = {
     //         "nur_jumuah" = in diesem Zeitraum NUR die Jumu'ah-Ansicht, dauerhaft
     zeitraeume: [
       { wochentag: 4, von: "00:00", bis: "23:59", modus: "gemischt" },   // Donnerstag ganztags
-      { wochentag: 5, von: "00:00", bis: "13:14", modus: "gemischt" },  // Freitag bis 14:30
-      { wochentag: 5, von: "13:15", bis: "14:30", modus: "nur_jumuah" }
+      { wochentag: 5, von: "00:00", bis: "12:44", modus: "gemischt" },  // Freitag bis 14:30
+      { wochentag: 5, von: "12:45", bis: "14:00", modus: "nur_jumuah" }
     ],
 
     // Alle wie viele Sekunden erscheint die Sonderansicht? (180 = 3 Minuten)
-    intervallSekunden: 190,
+    intervallSekunden: 120,
 
     // Wie viele Sekunden bleibt sie stehen?
     anzeigeSekunden: 20,
@@ -208,10 +208,10 @@ window.CONFIG = {
       untertitel: "Freitagsgebet",    // darunter
       heute: "Heute",                 // vor dem Datum, wenn das Gebet heute ist
       morgen: "Morgen",               // vor dem Datum, wenn das Gebet morgen ist
-      hinweis: "Yeni saat/Neue Uhrzeit 13:15 Uhr",                    // zusätzliche Zeile ganz unten, z. B. "Neue Uhrzeit!" ("" = keine)
+      hinweis: "Yeni saat / Neue Uhrzeit 13:15 Uhr",                    // zusätzliche Zeile ganz unten, z. B. "Neue Uhrzeit!" ("" = keine)
       // Zeitraum für den Hinweis (Datum und Uhrzeit). Leer lassen ("") = immer sichtbar.
-      hinweisAb: "2026-10-30 13:15",    // ab hier sichtbar (gleich wie die Umstellung oben)
-      hinweisBis: "2026-11-06 14:30",   // ab hier wieder ausgeblendet
+      hinweisAb: "2026-10-30 12:45",    // ab hier sichtbar (gleich wie die Umstellung oben)
+      hinweisBis: "2026-11-06 14:00",   // ab hier wieder ausgeblendet
     },
   },
 
