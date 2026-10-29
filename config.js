@@ -209,6 +209,9 @@ window.CONFIG = {
       heute: "Heute",                 // vor dem Datum, wenn das Gebet heute ist
       morgen: "Morgen",               // vor dem Datum, wenn das Gebet morgen ist
       hinweis: "Yeni saat/Neue Uhrzeit 13:15 Uhr",                    // zusätzliche Zeile ganz unten, z. B. "Neue Uhrzeit!" ("" = keine)
+      // Zeitraum für den Hinweis (Datum und Uhrzeit). Leer lassen ("") = immer sichtbar.
+      hinweisAb: "2026-10-30 13:15",    // ab hier sichtbar (gleich wie die Umstellung oben)
+      hinweisBis: "2026-11-06 13:15",   // ab hier wieder ausgeblendet
     },
   },
 

@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2026-10-29a';   // bei jeder Änderung erhöhen (auch in index.html)
+  var VERSION = '2026-10-29b';   // bei jeder Änderung erhöhen (auch in index.html)
   var CFG = window.CONFIG, L = window.Logik, TZ = CFG.ZEITZONE || 'Europe/Berlin';
   var param = new URLSearchParams(location.search);
   var $ = function (id) { return document.getElementById(id); };
@@ -104,7 +104,15 @@
   $('j-titel').textContent = JT.titel || "Jumu'ah";
   $('j-untertitel').textContent = JT.untertitel || 'Freitagsgebet';
   $('j-hinweis').textContent = JT.hinweis || '';
-  $('j-hinweis').style.display = JT.hinweis ? '' : 'none';
+  $('j-hinweis').style.display = 'none';
+
+  // Hinweiszeile nur im eingestellten Zeitfenster (hinweisAb / hinweisBis) zeigen
+  function hinweisZeigen(w) {
+    var an = !!JT.hinweis && L.imZeitfenster(w, JT.hinweisAb, JT.hinweisBis);
+    if (an === zuletzt.hinweis) return;
+    zuletzt.hinweis = an;
+    $('j-hinweis').style.display = an ? '' : 'none';
+  }
 
   var TEXTE = CFG.TEXTE || {};
   TEXTE.naechstesGebet = TEXTE.naechstesGebet || 'Nächstes Gebet';
@@ -363,6 +371,7 @@
       // Jeder Teil für sich: Ein Fehler in einem Teil darf die anderen
       // (z. B. den Wechsel zur Jumu'ah-Ansicht) nicht aufhalten.
       schritt(jumuahInhalte, w);
+      schritt(hinweisZeigen, w);
       schritt(zeitenAnzeigen, w);
       schritt(modusSetzen, w);
       schritt(jumuahUmschalten, w);

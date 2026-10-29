@@ -173,6 +173,14 @@
     return erg;
   };
 
+  // Liegt der Zeitpunkt w im Fenster [ab, bis)? ab/bis als "YYYY-MM-DD HH:MM", beide optional.
+  L.imZeitfenster = function (w, ab, bis) {
+    var jetzt = w.tag + ' ' + L.zwei(w.h) + ':' + L.zwei(w.mi);
+    if (ab && jetzt < String(ab).replace('T', ' ')) return false;
+    if (bis && jetzt >= String(bis).replace('T', ' ')) return false;
+    return true;
+  };
+
   L.jumuahZiel = function (w, jumuahCfgBasis, tz) {
     var jumuahCfg = L.jumuahCfgJetzt(jumuahCfgBasis, w);
     var freitag = L.naechsterFreitag(w.tag);

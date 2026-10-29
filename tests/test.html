@@ -147,6 +147,10 @@
     pruefe('Änderung: Do 05.11. → morgen 13:15', ziel2('2026-11-05', '20:00'), ['2026-11-06', '13:15', 'Morgen']);
     pruefe('Änderung: Fr 06.11. 14:00 → heute 13:15 (Nachlauf 120 Min.)', ziel2('2026-11-06', '14:00'), ['2026-11-06', '13:15', 'Heute']);
     pruefe('Änderung: Fr 06.11. 15:15 → nächste Woche', ziel2('2026-11-06', '15:15'), ['2026-11-13', '13:15', '']);
+    pruefe('Zeitfenster: Do 29.10. 18:00 → noch nicht', L.imZeitfenster(w(DO, '18:00'), '2026-10-30 13:30', '2026-11-06 13:15'), false);
+    pruefe('Zeitfenster: Fr 30.10. 13:30 → sichtbar', L.imZeitfenster(w(FR, '13:30'), '2026-10-30 13:30', '2026-11-06 13:15'), true);
+    pruefe('Zeitfenster: Fr 06.11. 13:15 → wieder aus', L.imZeitfenster(w('2026-11-06', '13:15'), '2026-10-30 13:30', '2026-11-06 13:15'), false);
+    pruefe('Zeitfenster: ohne ab/bis → immer', L.imZeitfenster(w(DO, '18:00'), '', ''), true);
     pruefe('Nächster Freitag ab Do 29.10.', L.naechsterFreitag(DO), FR);
     pruefe('Nächster Freitag ab Fr 30.10.', L.naechsterFreitag(FR), FR);
     pruefe('Nächster Freitag ab Sa 31.10.', L.naechsterFreitag('2026-10-31'), '2026-11-06');
