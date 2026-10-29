@@ -307,13 +307,11 @@ window.CONFIG = {
   // Tägliches Neuladen der Seite (für einen stabilen Dauerbetrieb).
   NEULADEN_UM: "03:00",
 
-  // Automatisch aktualisieren: Die Anzeige prüft regelmäßig, ob auf GitHub etwas
-  // geändert wurde, und lädt sich dann selbst neu (nur wenn die neue config.js
-  // fehlerfrei ist – sonst läuft die bisherige Version weiter).
-  AUTO_AKTUALISIEREN: {
-    aktiv: true,
-    alleSekunden: 120,   // wie oft geprüft wird (mindestens 30)
-  },
+  // Sofort aktualisieren: Änderungen erscheinen normalerweise erst um 03:00 (siehe oben).
+  // Soll der Fernseher eine Änderung SOFORT zeigen, hier den Text ändern – egal wie,
+  // z. B. das aktuelle Datum und die Uhrzeit eintragen. Innerhalb von ca. 2–3 Minuten
+  // lädt die Anzeige dann neu. Ist die config.js fehlerhaft, passiert nichts.
+  SOFORT_AKTUALISIEREN: "2026-10-29 19:00",
 
   // Burn-in-Schutz: Das Layout verschiebt sich unmerklich.
   BURNIN_SCHUTZ: {

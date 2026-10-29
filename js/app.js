@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2026-10-29c';   // bei jeder Änderung erhöhen (auch in index.html)
+  var VERSION = '2026-10-29d';   // bei jeder Änderung erhöhen (auch in index.html)
   var CFG = window.CONFIG, L = window.Logik, TZ = CFG.ZEITZONE || 'Europe/Berlin';
   var param = new URLSearchParams(location.search);
   var $ = function (id) { return document.getElementById(id); };
@@ -410,16 +410,16 @@
   setInterval(function () { if (zuletzt.tag) datenNachladen(zuletzt.tag); }, 5 * 60000);
   setInterval(function () { Daten.neuLaden(); }, 6 * 3600000);
 
-  // Automatisch aktualisieren: Regelmäßig prüfen, ob auf GitHub eine neue Version
-  // (index.html) oder geänderte Einstellungen (config.js) liegen – dann neu laden.
+  // Sofort aktualisieren – nur auf Aufforderung: Alle 2 Minuten wird geprüft, ob in
+  // der config.js auf GitHub der Wert SOFORT_AKTUALISIEREN geändert wurde. Nur dann
+  // lädt die Anzeige neu; alle anderen Änderungen kommen wie gewohnt um 03:00.
   // Eine fehlerhafte neue config.js (z. B. vergessenes Komma) wird NICHT übernommen.
-  var AA = CFG.AUTO_AKTUALISIEREN || {};
   function frisch(url) {
     return fetch(url + (url.indexOf('?') < 0 ? '?' : '&') + 'pruefung=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); });
   }
   function neuLadenErzwingen(ziel) {
-    // Schutz vor Endlosschleife: denselben neuen Stand nur einmal laden
+    // Schutz vor Endlosschleife: dieselbe Aufforderung nur einmal ausführen
     try {
       if (sessionStorage.getItem('anzeige-aktualisiert-auf') === ziel) return;
       sessionStorage.setItem('anzeige-aktualisiert-auf', ziel);
@@ -428,25 +428,21 @@
     var a = location.search.replace(/([?&])aktualisiert=\d+&?/, '$1').replace(/[?&]$/, '');
     location.replace(location.pathname + (a ? a + '&' : '?') + 'aktualisiert=' + Date.now());
   }
-  function aufAenderungenPruefen() {
-    Promise.all([frisch(location.pathname), frisch('config.js')]).then(function (t) {
-      var v = t[0].match(/js\/app\.js\?v=([^"']+)/);
-      if (v && v[1] !== VERSION) { neuLadenErzwingen('version:' + v[1]); return; }
+  function aufAufforderungPruefen() {
+    frisch('config.js').then(function (text) {
       var probe = {};
       try {
-        new Function('window', t[1])(probe);
+        new Function('window', text)(probe);
         if (!probe.CONFIG || !probe.CONFIG.GEBETE) throw new Error('CONFIG unvollständig');
       } catch (e) {
         console.warn('Neue config.js ist fehlerhaft – Anzeige bleibt bei der bisherigen Version:', e.message);
         return;
       }
-      var neu = JSON.stringify(probe.CONFIG);
-      if (neu !== JSON.stringify(CFG)) neuLadenErzwingen('config:' + neu.length + ':' + neu.slice(-200));
+      var neu = String(probe.CONFIG.SOFORT_AKTUALISIEREN || '');
+      if (neu !== String(CFG.SOFORT_AKTUALISIEREN || '')) neuLadenErzwingen('sofort:' + neu);
     }).catch(function () { /* offline o. Ä. – später erneut */ });
   }
-  if (AA.aktiv !== false && location.protocol !== 'file:' && simStartMs === null) {
-    setInterval(aufAenderungenPruefen, Math.max(30, AA.alleSekunden || 120) * 1000);
-  }
+  if (location.protocol !== 'file:' && simStartMs === null) setInterval(aufAufforderungPruefen, 120000);
 
   // Tägliches Neuladen (nach echter Uhrzeit, nicht im Simulationsmodus).
   setInterval(function () {
