@@ -152,11 +152,36 @@
   // jumuahCfg.heuteBisMinutenNach (Standard 120) Minuten nach Beginn vergangen sind –
   // danach der Freitag der nächsten Woche.
   // Ergebnis: { tag: "YYYY-MM-DD", uhrzeit: "HH:MM", wann: "Heute" | "Morgen" | "" }
-  L.jumuahZiel = function (w, jumuahCfg, tz) {
+  // Geplante Uhrzeit-Änderungen (jumuahCfg.aenderungen) berücksichtigen:
+  // Liefert die Einstellungen, die zum Zeitpunkt w gelten, und – falls eine Änderung
+  // genau heute wirksam wurde – deren Zeitpunkt.
+  // Eintrag: { sichtbarAb: "2026-10-30 13:30", uhrzeitWinter: "13:15", uhrzeitSommer: "…" }
+  L.jumuahCfgJetzt = function (jumuahCfg, w) {
+    var jetzt = w.tag + ' ' + L.zwei(w.h) + ':' + L.zwei(w.mi);
+    var erg = {}, heuteGewechselt = false;
+    Object.keys(jumuahCfg).forEach(function (k) { erg[k] = jumuahCfg[k]; });
+    (jumuahCfg.aenderungen || []).slice().sort(function (a, b) {
+      return String(a.sichtbarAb) < String(b.sichtbarAb) ? -1 : 1;
+    }).forEach(function (a) {
+      var ab = String(a.sichtbarAb || '').replace('T', ' ');
+      if (!ab || ab > jetzt) return;
+      if (a.uhrzeitSommer) erg.uhrzeitSommer = a.uhrzeitSommer;
+      if (a.uhrzeitWinter) erg.uhrzeitWinter = a.uhrzeitWinter;
+      if (ab.slice(0, 10) === w.tag) heuteGewechselt = true;
+    });
+    erg.heuteGewechselt = heuteGewechselt;
+    return erg;
+  };
+
+  L.jumuahZiel = function (w, jumuahCfgBasis, tz) {
+    var jumuahCfg = L.jumuahCfgJetzt(jumuahCfgBasis, w);
     var freitag = L.naechsterFreitag(w.tag);
     var uhrzeit = L.jumuahUhrzeit(jumuahCfg, freitag, tz);
     var nach = jumuahCfg.heuteBisMinutenNach != null ? jumuahCfg.heuteBisMinutenNach : 120;
-    if (freitag === w.tag && w.h * 60 + w.mi >= L.minuten(uhrzeit) + nach) {
+    // Am Freitag ist das heutige Gebet vorbei, wenn die Nachlaufzeit um ist –
+    // oder wenn heute eine neue Uhrzeit wirksam wurde (dann zeigt die Anzeige
+    // sofort den nächsten Freitag mit der neuen Uhrzeit).
+    if (freitag === w.tag && (jumuahCfg.heuteGewechselt || w.h * 60 + w.mi >= L.minuten(uhrzeit) + nach)) {
       freitag = L.tagPlus(w.tag, 7);
       uhrzeit = L.jumuahUhrzeit(jumuahCfg, freitag, tz);
     }

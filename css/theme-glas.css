@@ -302,3 +302,4 @@
 .modus-hell .logo-glas.mehrfarbig .logo-nacht { opacity: 0; }
 .theme-5 .kopf .logo-glas.mehrfarbig { width: 122px; height: 76px; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .18)); }
 .theme-5 .j-logo.mehrfarbig { width: 240px; height: 150px; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, .25)); }
+.theme-5 .j-hinweis { color: var(--g-rot); font-size: 38px; letter-spacing: -.01em; }

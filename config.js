@@ -167,6 +167,15 @@ window.CONFIG = {
 
     // Bezeichnung in dieser kleinen Anzeige oben rechts.
     bezeichnung: "Cuma Namazı / Freitagsgebet",
+
+    // Geplante Änderung der Uhrzeit: Ab „sichtbarAb“ (Datum und Uhrzeit) gelten die
+    // neuen Uhrzeiten. Vorher zeigt die Anzeige weiter die alten an. Wird die Änderung
+    // an einem Freitag wirksam (z. B. nach dem Gebet), zeigt die Anzeige ab dann sofort
+    // den nächsten Freitag mit der neuen Uhrzeit. Es kann mehrere Einträge geben.
+    // Nur ändern, was sich ändert – fehlt uhrzeitSommer, bleibt die bisherige.
+    aenderungen: [
+      { sichtbarAb: "2026-10-30 13:30", uhrzeitWinter: "13:15" },   // ab 6.11. um 13:15
+    ],
   },
 
   // Die bildschirmfüllende Jumu'ah-Sonderansicht.
@@ -191,6 +200,15 @@ window.CONFIG = {
 
     // Dauer der Überblendung in Millisekunden (1500 = 1,5 Sekunden)
     ueberblendungMs: 1500,
+
+    // Texte auf der Jumu'ah-Ansicht
+    texte: {
+      titel: "Jumu'ah",               // große Überschrift
+      untertitel: "Freitagsgebet",    // darunter
+      heute: "Heute",                 // vor dem Datum, wenn das Gebet heute ist
+      morgen: "Morgen",               // vor dem Datum, wenn das Gebet morgen ist
+      hinweis: "",                    // zusätzliche Zeile ganz unten, z. B. "Neue Uhrzeit!" ("" = keine)
+    },
   },
 
 

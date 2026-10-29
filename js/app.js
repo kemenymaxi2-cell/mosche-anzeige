@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2026-10-28e';   // bei jeder Änderung erhöhen (auch in index.html)
+  var VERSION = '2026-10-29a';   // bei jeder Änderung erhöhen (auch in index.html)
   var CFG = window.CONFIG, L = window.Logik, TZ = CFG.ZEITZONE || 'Europe/Berlin';
   var param = new URLSearchParams(location.search);
   var $ = function (id) { return document.getElementById(id); };
@@ -96,6 +96,15 @@
   /* ---------- Statische Inhalte ---------- */
 
   $('moschee-name').textContent = CFG.MOSCHEE_NAME || '';
+
+  // Texte der Jumu'ah-Ansicht (JUMUAH_ANSICHT.texte in config.js)
+  var JT = (CFG.JUMUAH_ANSICHT && CFG.JUMUAH_ANSICHT.texte) || {};
+  JT.heute = JT.heute || 'Heute';
+  JT.morgen = JT.morgen || 'Morgen';
+  $('j-titel').textContent = JT.titel || "Jumu'ah";
+  $('j-untertitel').textContent = JT.untertitel || 'Freitagsgebet';
+  $('j-hinweis').textContent = JT.hinweis || '';
+  $('j-hinweis').style.display = JT.hinweis ? '' : 'none';
 
   var TEXTE = CFG.TEXTE || {};
   TEXTE.naechstesGebet = TEXTE.naechstesGebet || 'Nächstes Gebet';
@@ -239,7 +248,8 @@
     var schluessel = ziel.tag + ziel.uhrzeit + ziel.wann;
     if (schluessel === zuletzt.jumuahZiel) return;
     zuletzt.jumuahZiel = schluessel;
-    var freitag = ziel.tag, jZeit = ziel.uhrzeit, wann = ziel.wann;
+    var freitag = ziel.tag, jZeit = ziel.uhrzeit;
+    var wann = ziel.wann === 'Heute' ? JT.heute : ziel.wann === 'Morgen' ? JT.morgen : '';
     var fd = freitag.split('-');
     $('jumuah-mini').innerHTML = '';
     if (CFG.JUMUAH.aufHauptbildschirm) {
@@ -297,7 +307,7 @@
       hinweis = CFG.GEBETE.fajr.name + '-Zeit endet in ' + L.dauerText(st.fajrEndeMs - jetzt()) +
         ' (' + CFG.GEBETE.shuruq.name + ' ' + L.zwei(s.h) + ':' + L.zwei(s.mi) + ')';
     } else if (w.wochentag === 5 && st.naechstes.schluessel === 'dhuhr') {
-      hinweis += ' · Freitagsgebet ' + L.jumuahUhrzeit(CFG.JUMUAH, w.tag, TZ);
+      hinweis += ' · Freitagsgebet ' + L.jumuahUhrzeit(L.jumuahCfgJetzt(CFG.JUMUAH, w), w.tag, TZ);
     }
     setzeText('n-hinweis', hinweis);
   }

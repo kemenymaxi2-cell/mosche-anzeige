@@ -340,3 +340,10 @@ body {
   border-radius: 10px;
 }
 .diagnose #diagnose { display: block; }
+
+/* Zusätzliche Hinweiszeile in der Jumu'ah-Ansicht (JUMUAH_ANSICHT.texte.hinweis) */
+.j-hinweis {
+  margin-top: 22px;
+  font-size: 40px; font-weight: 600;
+  color: var(--akzent);
+}
