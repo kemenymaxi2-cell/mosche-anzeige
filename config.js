@@ -174,7 +174,7 @@ window.CONFIG = {
     // den nächsten Freitag mit der neuen Uhrzeit. Es kann mehrere Einträge geben.
     // Nur ändern, was sich ändert – fehlt uhrzeitSommer, bleibt die bisherige.
     aenderungen: [
-      { sichtbarAb: "2026-10-30 13:30", uhrzeitWinter: "13:15" },   // ab 6.11. um 13:15
+      { sichtbarAb: "2026-10-30 13:15", uhrzeitWinter: "13:15" },   // ab 6.11. um 13:15
     ],
   },
 
@@ -189,7 +189,8 @@ window.CONFIG = {
     //         "nur_jumuah" = in diesem Zeitraum NUR die Jumu'ah-Ansicht, dauerhaft
     zeitraeume: [
       { wochentag: 4, von: "00:00", bis: "23:59", modus: "gemischt" },   // Donnerstag ganztags
-      { wochentag: 5, von: "00:00", bis: "14:30", modus: "gemischt" },   // Freitag bis 14:30
+      { wochentag: 5, von: "00:00", bis: "13:14", modus: "gemischt" },  // Freitag bis 14:30
+      { wochentag: 5, von: "13:15", bis: "14:30", modus: "nur_jumuah" }
     ],
 
     // Alle wie viele Sekunden erscheint die Sonderansicht? (180 = 3 Minuten)
@@ -203,11 +204,11 @@ window.CONFIG = {
 
     // Texte auf der Jumu'ah-Ansicht
     texte: {
-      titel: "Jumu'ah",               // große Überschrift
+      titel: "Cuma namazı",               // große Überschrift
       untertitel: "Freitagsgebet",    // darunter
       heute: "Heute",                 // vor dem Datum, wenn das Gebet heute ist
       morgen: "Morgen",               // vor dem Datum, wenn das Gebet morgen ist
-      hinweis: "",                    // zusätzliche Zeile ganz unten, z. B. "Neue Uhrzeit!" ("" = keine)
+      hinweis: "Yeni saat/Neue Uhrzeit 13:15 Uhr",                    // zusätzliche Zeile ganz unten, z. B. "Neue Uhrzeit!" ("" = keine)
     },
   },
 
