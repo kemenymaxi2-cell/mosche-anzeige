@@ -307,6 +307,14 @@ window.CONFIG = {
   // Tägliches Neuladen der Seite (für einen stabilen Dauerbetrieb).
   NEULADEN_UM: "03:00",
 
+  // Automatisch aktualisieren: Die Anzeige prüft regelmäßig, ob auf GitHub etwas
+  // geändert wurde, und lädt sich dann selbst neu (nur wenn die neue config.js
+  // fehlerfrei ist – sonst läuft die bisherige Version weiter).
+  AUTO_AKTUALISIEREN: {
+    aktiv: true,
+    alleSekunden: 120,   // wie oft geprüft wird (mindestens 30)
+  },
+
   // Burn-in-Schutz: Das Layout verschiebt sich unmerklich.
   BURNIN_SCHUTZ: {
     aktiv: true,

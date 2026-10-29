@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '2026-10-29b';   // bei jeder Änderung erhöhen (auch in index.html)
+  var VERSION = '2026-10-29c';   // bei jeder Änderung erhöhen (auch in index.html)
   var CFG = window.CONFIG, L = window.Logik, TZ = CFG.ZEITZONE || 'Europe/Berlin';
   var param = new URLSearchParams(location.search);
   var $ = function (id) { return document.getElementById(id); };
@@ -409,6 +409,44 @@
   // Fehlende Gebetszeiten regelmäßig erneut versuchen; Datei alle 6 Std. neu einlesen.
   setInterval(function () { if (zuletzt.tag) datenNachladen(zuletzt.tag); }, 5 * 60000);
   setInterval(function () { Daten.neuLaden(); }, 6 * 3600000);
+
+  // Automatisch aktualisieren: Regelmäßig prüfen, ob auf GitHub eine neue Version
+  // (index.html) oder geänderte Einstellungen (config.js) liegen – dann neu laden.
+  // Eine fehlerhafte neue config.js (z. B. vergessenes Komma) wird NICHT übernommen.
+  var AA = CFG.AUTO_AKTUALISIEREN || {};
+  function frisch(url) {
+    return fetch(url + (url.indexOf('?') < 0 ? '?' : '&') + 'pruefung=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); });
+  }
+  function neuLadenErzwingen(ziel) {
+    // Schutz vor Endlosschleife: denselben neuen Stand nur einmal laden
+    try {
+      if (sessionStorage.getItem('anzeige-aktualisiert-auf') === ziel) return;
+      sessionStorage.setItem('anzeige-aktualisiert-auf', ziel);
+    } catch (e) { /* ohne Speicher trotzdem neu laden */ }
+    // Neuer Adresszusatz, damit der Browser garantiert die neue Seite holt
+    var a = location.search.replace(/([?&])aktualisiert=\d+&?/, '$1').replace(/[?&]$/, '');
+    location.replace(location.pathname + (a ? a + '&' : '?') + 'aktualisiert=' + Date.now());
+  }
+  function aufAenderungenPruefen() {
+    Promise.all([frisch(location.pathname), frisch('config.js')]).then(function (t) {
+      var v = t[0].match(/js\/app\.js\?v=([^"']+)/);
+      if (v && v[1] !== VERSION) { neuLadenErzwingen('version:' + v[1]); return; }
+      var probe = {};
+      try {
+        new Function('window', t[1])(probe);
+        if (!probe.CONFIG || !probe.CONFIG.GEBETE) throw new Error('CONFIG unvollständig');
+      } catch (e) {
+        console.warn('Neue config.js ist fehlerhaft – Anzeige bleibt bei der bisherigen Version:', e.message);
+        return;
+      }
+      var neu = JSON.stringify(probe.CONFIG);
+      if (neu !== JSON.stringify(CFG)) neuLadenErzwingen('config:' + neu.length + ':' + neu.slice(-200));
+    }).catch(function () { /* offline o. Ä. – später erneut */ });
+  }
+  if (AA.aktiv !== false && location.protocol !== 'file:' && simStartMs === null) {
+    setInterval(aufAenderungenPruefen, Math.max(30, AA.alleSekunden || 120) * 1000);
+  }
 
   // Tägliches Neuladen (nach echter Uhrzeit, nicht im Simulationsmodus).
   setInterval(function () {
